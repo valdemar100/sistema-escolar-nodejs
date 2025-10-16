@@ -12,7 +12,7 @@ Sistema completo para gerenciamento escolar desenvolvido com **Node.js**, **Expr
 
 ## 🚀 Demo Online
 
-🌐 **Acesse a demonstração:** [Sistema Escolar Online](https://seu-deploy-url.com)
+🌐 **Repositório GitHub:** [Sistema Escolar NodeJS](https://github.com/valdemar100/sistema-escolar-nodejs)
 
 📧 **Login de Teste:** `admin@escola.com`  
 🔐 **Senha:** `123456`

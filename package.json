@@ -1,0 +1,45 @@
+{
+  "name": "sistema-escolar",
+  "version": "1.0.0",
+  "description": "Sistema escolar completo com front-end e back-end - Valdemar Sistemas",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node scripts/start.js",
+    "dev": "nodemon backend/server.js",
+    "server": "node backend/server.js",
+    "init-db": "node backend/db/database.js",
+    "build": "echo \"Sistema não requer build - arquivos estáticos\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sistema",
+    "escola",
+    "nodejs",
+    "express",
+    "sqlite",
+    "crud",
+    "educacao"
+  ],
+  "author": "Sistema Escolar",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/usuario/sistema-escolar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/usuario/sistema-escolar/issues"
+  },
+  "homepage": "https://github.com/usuario/sistema-escolar#readme"
+}

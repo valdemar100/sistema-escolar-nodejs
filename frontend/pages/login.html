@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema Escolar</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card fade-in">
+            <div class="login-header">
+                <h1 class="login-title">Sistema Escolar</h1>
+                <p class="login-subtitle">Faça login para acessar o sistema</p>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="Digite seu e-mail" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input type="password" id="senha" name="senha" class="form-input" placeholder="Digite sua senha" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full mb-20" id="loginBtn">
+                    Entrar
+                </button>
+
+                <div class="text-center">
+                    <p class="text-secondary">Não tem uma conta?</p>
+                    <a href="/cadastro" class="btn btn-secondary">
+                        Cadastrar novo usuário
+                    </a>
+                </div>
+            </form>
+
+            <div class="mt-20 text-center">
+                <small class="text-secondary">
+                    <strong>Credenciais padrão:</strong><br>
+                    E-mail: admin@escola.com<br>
+                    Senha: 123456
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-frame">
+            © Valdemar Sistemas - 2025
+        </div>
+    </footer>
+
+    <script src="../assets/js/login.js"></script>
+</body>
+</html>

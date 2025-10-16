@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alunos - Sistema Escolar</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Sistema Escolar</h1>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="/dashboard">Início</a></li>
+                    <li><a href="/usuarios">Usuários</a></li>
+                    <li><a href="/alunos" class="active">Alunos</a></li>
+                    <li><a href="/professores">Professores</a></li>
+                    <li><a href="#" onclick="logout()" style="color: var(--error);">Sair</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title">Gerenciar Alunos</h2>
+                <button class="btn btn-primary" onclick="abrirModal()">
+                    ➕ Adicionar Aluno
+                </button>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar aluno por nome...">
+                <button class="btn btn-secondary" onclick="buscarAlunos()">
+                    🔍 Buscar
+                </button>
+                <button class="btn btn-secondary" onclick="limparBusca()">
+                    🔄 Limpar
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Data de Nascimento</th>
+                            <th>Série/Turma</th>
+                            <th>E-mail</th>
+                            <th>Telefone</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaAlunos">
+                        <tr>
+                            <td colspan="7" class="text-center">Carregando alunos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para adicionar/editar aluno -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Adicionar Aluno</h3>
+                <button class="close-btn" onclick="fecharModal()">&times;</button>
+            </div>
+
+            <form id="alunoForm">
+                <input type="hidden" id="alunoId">
+                
+                <div class="form-group">
+                    <label for="nome" class="form-label">Nome Completo *</label>
+                    <input type="text" id="nome" name="nome" class="form-input" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dataNascimento" class="form-label">Data de Nascimento *</label>
+                        <input type="date" id="dataNascimento" name="dataNascimento" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="serieTurma" class="form-label">Série/Turma *</label>
+                        <select id="serieTurma" name="serieTurma" class="form-input" required>
+                            <option value="">Selecione...</option>
+                            <option value="1º Ano A">1º Ano A</option>
+                            <option value="1º Ano B">1º Ano B</option>
+                            <option value="2º Ano A">2º Ano A</option>
+                            <option value="2º Ano B">2º Ano B</option>
+                            <option value="3º Ano A">3º Ano A</option>
+                            <option value="3º Ano B">3º Ano B</option>
+                            <option value="4º Ano A">4º Ano A</option>
+                            <option value="4º Ano B">4º Ano B</option>
+                            <option value="5º Ano A">5º Ano A</option>
+                            <option value="5º Ano B">5º Ano B</option>
+                            <option value="6º Ano A">6º Ano A</option>
+                            <option value="6º Ano B">6º Ano B</option>
+                            <option value="7º Ano A">7º Ano A</option>
+                            <option value="7º Ano B">7º Ano B</option>
+                            <option value="8º Ano A">8º Ano A</option>
+                            <option value="8º Ano B">8º Ano B</option>
+                            <option value="9º Ano A">9º Ano A</option>
+                            <option value="9º Ano B">9º Ano B</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email" class="form-label">E-mail</label>
+                        <input type="email" id="email" name="email" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone" class="form-label">Telefone</label>
+                        <input type="tel" id="telefone" name="telefone" class="form-input" placeholder="(11) 99999-9999">
+                    </div>
+                </div>
+
+                <div class="flex gap-10 mt-20">
+                    <button type="submit" class="btn btn-primary" id="salvarBtn">
+                        Salvar
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal()">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-frame">
+            © Valdemar Sistemas - 2025
+        </div>
+    </footer>
+
+    <script src="../assets/js/alunos.js"></script>
+</body>
+</html>

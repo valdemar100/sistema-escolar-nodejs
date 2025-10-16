@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professores - Sistema Escolar</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Sistema Escolar</h1>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="/dashboard">Início</a></li>
+                    <li><a href="/usuarios">Usuários</a></li>
+                    <li><a href="/alunos">Alunos</a></li>
+                    <li><a href="/professores" class="active">Professores</a></li>
+                    <li><a href="#" onclick="logout()" style="color: var(--error);">Sair</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title">Gerenciar Professores</h2>
+                <button class="btn btn-primary" onclick="abrirModal()">
+                    ➕ Adicionar Professor
+                </button>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nome ou disciplina...">
+                <button class="btn btn-secondary" onclick="buscarProfessores()">
+                    🔍 Buscar
+                </button>
+                <button class="btn btn-secondary" onclick="limparBusca()">
+                    🔄 Limpar
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Disciplina</th>
+                            <th>E-mail</th>
+                            <th>Telefone</th>
+                            <th>Cadastrado em</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaProfessores">
+                        <tr>
+                            <td colspan="7" class="text-center">Carregando professores...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para adicionar/editar professor -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Adicionar Professor</h3>
+                <button class="close-btn" onclick="fecharModal()">&times;</button>
+            </div>
+
+            <form id="professorForm">
+                <input type="hidden" id="professorId">
+                
+                <div class="form-group">
+                    <label for="nome" class="form-label">Nome Completo *</label>
+                    <input type="text" id="nome" name="nome" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="disciplina" class="form-label">Disciplina *</label>
+                    <select id="disciplina" name="disciplina" class="form-input" required>
+                        <option value="">Selecione uma disciplina...</option>
+                        <option value="Matemática">Matemática</option>
+                        <option value="Português">Português</option>
+                        <option value="História">História</option>
+                        <option value="Geografia">Geografia</option>
+                        <option value="Ciências">Ciências</option>
+                        <option value="Física">Física</option>
+                        <option value="Química">Química</option>
+                        <option value="Biologia">Biologia</option>
+                        <option value="Inglês">Inglês</option>
+                        <option value="Espanhol">Espanhol</option>
+                        <option value="Educação Física">Educação Física</option>
+                        <option value="Artes">Artes</option>
+                        <option value="Música">Música</option>
+                        <option value="Filosofia">Filosofia</option>
+                        <option value="Sociologia">Sociologia</option>
+                        <option value="Informática">Informática</option>
+                        <option value="Literatura">Literatura</option>
+                        <option value="Redação">Redação</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email" class="form-label">E-mail</label>
+                        <input type="email" id="email" name="email" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone" class="form-label">Telefone</label>
+                        <input type="tel" id="telefone" name="telefone" class="form-input" placeholder="(11) 99999-9999">
+                    </div>
+                </div>
+
+                <div class="flex gap-10 mt-20">
+                    <button type="submit" class="btn btn-primary" id="salvarBtn">
+                        Salvar
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal()">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-frame">
+            © Valdemar Sistemas - 2025
+        </div>
+    </footer>
+
+    <script src="../assets/js/professores.js"></script>
+</body>
+</html>

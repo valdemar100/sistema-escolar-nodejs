@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema Escolar</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Sistema Escolar</h1>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="/dashboard" class="active">Início</a></li>
+                    <li><a href="/usuarios">Usuários</a></li>
+                    <li><a href="/alunos">Alunos</a></li>
+                    <li><a href="/professores">Professores</a></li>
+                    <li><a href="#" onclick="logout()" style="color: var(--error);">Sair</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2 class="card-title">Bem-vindo ao Sistema Escolar</h2>
+                <span id="usuarioNome" class="text-secondary"></span>
+            </div>
+            <p class="text-secondary">Gerencie alunos, professores e usuários de forma simples e eficiente.</p>
+        </div>
+
+        <div class="dashboard-cards">
+            <div class="stat-card fade-in">
+                <div class="stat-number" id="totalAlunos">0</div>
+                <div class="stat-label">Total de Alunos</div>
+            </div>
+            
+            <div class="stat-card success fade-in">
+                <div class="stat-number" id="totalProfessores">0</div>
+                <div class="stat-label">Total de Professores</div>
+            </div>
+            
+            <div class="stat-card warning fade-in">
+                <div class="stat-number" id="totalUsuarios">0</div>
+                <div class="stat-label">Total de Usuários</div>
+            </div>
+        </div>
+
+        <div class="chart-container fade-in">
+            <h3 class="card-title mb-20">Visão Geral</h3>
+            <canvas id="graficoGeral" class="chart-canvas"></canvas>
+        </div>
+
+        <div class="card fade-in">
+            <div class="card-header">
+                <h3 class="card-title">Ações Rápidas</h3>
+            </div>
+            <div class="flex gap-10">
+                <a href="/usuarios" class="btn btn-primary">
+                    👤 Gerenciar Usuários
+                </a>
+                <a href="/alunos" class="btn btn-success">
+                    🎓 Gerenciar Alunos
+                </a>
+                <a href="/professores" class="btn btn-secondary">
+                    👨‍🏫 Gerenciar Professores
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-frame">
+            © Valdemar Sistemas - 2025
+        </div>
+    </footer>
+
+    <script>
+        // Configuração da API
+        const API_BASE = window.location.origin + '/api';
+
+        // Verificar autenticação
+        function verificarAuth() {
+            const usuario = localStorage.getItem('usuario');
+            if (!usuario) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return JSON.parse(usuario);
+        }
+
+        // Função de logout
+        function logout() {
+            localStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        }
+
+        // Toggle menu mobile
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('show');
+        }
+
+        // Carregar estatísticas
+        async function carregarEstatisticas() {
+            try {
+                const response = await fetch(`${API_BASE}/dashboard`);
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('totalAlunos').textContent = data.data.totalAlunos;
+                    document.getElementById('totalProfessores').textContent = data.data.totalProfessores;
+                    document.getElementById('totalUsuarios').textContent = data.data.totalUsuarios;
+
+                    // Criar gráfico
+                    criarGrafico(data.data);
+                } else {
+                    console.error('Erro ao carregar estatísticas:', data.message);
+                }
+            } catch (error) {
+                console.error('Erro de conexão:', error);
+            }
+        }
+
+        // Criar gráfico com Chart.js
+        function criarGrafico(dados) {
+            const ctx = document.getElementById('graficoGeral').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Alunos', 'Professores', 'Usuários'],
+                    datasets: [{
+                        data: [dados.totalAlunos, dados.totalProfessores, dados.totalUsuarios],
+                        backgroundColor: [
+                            '#3B82F6', // Azul (alunos)
+                            '#10B981', // Verde (professores)
+                            '#F59E0B'  // Laranja (usuários)
+                        ],
+                        borderColor: [
+                            '#2563EB',
+                            '#059669',
+                            '#D97706'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Distribuição por Categoria',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', () => {
+            const usuario = verificarAuth();
+            if (usuario) {
+                document.getElementById('usuarioNome').textContent = `Olá, ${usuario.nome}!`;
+                carregarEstatisticas();
+            }
+
+            // Animações de entrada
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.animation = `fadeIn 0.5s ease-out forwards`;
+                }, index * 100);
+            });
+        });
+
+        // Fechar menu mobile ao clicar fora
+        document.addEventListener('click', (e) => {
+            const navMenu = document.getElementById('navMenu');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            
+            if (!navMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+                navMenu.classList.remove('show');
+            }
+        });
+
+        // Atualizar estatísticas a cada 30 segundos
+        setInterval(carregarEstatisticas, 30000);
+    </script>
+</body>
+</html>

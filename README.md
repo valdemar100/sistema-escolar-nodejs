@@ -1,6 +1,21 @@
-# 📚 Sistema Escolar
+# 📚 Sistema Escolar - Valdemar Sistemas
+
+![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
+![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
 Sistema completo para gerenciamento escolar desenvolvido com **Node.js**, **Express**, **SQLite** e **HTML/CSS/JavaScript** puro.
+
+## 🚀 Demo Online
+
+🌐 **Acesse a demonstração:** [Sistema Escolar Online](https://seu-deploy-url.com)
+
+📧 **Login de Teste:** `admin@escola.com`  
+🔐 **Senha:** `123456`
 
 ## 🎨 Características
 
@@ -281,3 +296,35 @@ Desenvolvido com ❤️ para fins educacionais.
 ---
 
 **🎯 Sistema funcional, responsivo e pronto para uso!** 🚀
+
+## 🌟 Contribuição
+
+Quer contribuir? Siga estes passos:
+
+1. 🍴 **Fork** o projeto
+2. 🌱 **Crie** uma branch (`git checkout -b feature/nova-funcionalidade`)
+3. ✅ **Commit** suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
+4. 📤 **Push** para a branch (`git push origin feature/nova-funcionalidade`)
+5. 🔄 **Abra** um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## 👨‍💻 Autor
+
+**Valdemar Sistemas** - *Desenvolvimento Completo*
+
+- 📧 Email: contato@valdemarsistemas.com
+- 🌐 Website: [valdemarsistemas.com](https://valdemarsistemas.com)
+- 💼 LinkedIn: [Valdemar Sistemas](https://linkedin.com/in/valdemarsistemas)
+
+## 🙏 Agradecimentos
+
+- 📊 [Chart.js](https://chartjs.org) - Gráficos interativos
+- 🎨 Inspiração de design moderno
+- 🚀 Comunidade Node.js
+
+---
+
+⭐ **Se este projeto te ajudou, deixe uma estrela!** ⭐

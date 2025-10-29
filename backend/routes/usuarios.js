@@ -1,5 +1,13 @@
 const express = require('express');
-const { usuarioQueries } = require('../db/database');
+
+// Verificar se está em produção
+const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
+
+// Importar banco de dados apropriado
+const database = isProduction 
+    ? require('../db/memory-database') 
+    : require('../db/database');
+const { usuarioQueries } = database;
 
 const router = express.Router();
 

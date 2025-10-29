@@ -83,7 +83,7 @@ router.post('/', async (req, res) => {
             });
         }
 
-        const novoUsuario = await usuarioQueries.create(nome, email, senha);
+        const novoUsuario = await usuarioQueries.create({ nome, email, senha });
         res.status(201).json({
             success: true,
             message: 'Usuário criado com sucesso',
@@ -138,9 +138,9 @@ router.put('/:id', async (req, res) => {
             });
         }
 
-        const resultado = await usuarioQueries.update(id, nome, email, senha || null);
+        const resultado = await usuarioQueries.update(id, { nome, email, senha: senha || undefined });
         
-        if (resultado.changes === 0) {
+        if (!resultado) {
             return res.status(404).json({
                 success: false,
                 message: 'Usuário não encontrado'
@@ -149,7 +149,8 @@ router.put('/:id', async (req, res) => {
 
         res.json({
             success: true,
-            message: 'Usuário atualizado com sucesso'
+            message: 'Usuário atualizado com sucesso',
+            data: resultado
         });
     } catch (error) {
         console.error('Erro ao atualizar usuário:', error);
@@ -167,7 +168,7 @@ router.delete('/:id', async (req, res) => {
         
         const resultado = await usuarioQueries.delete(id);
         
-        if (resultado.changes === 0) {
+        if (!resultado) {
             return res.status(404).json({
                 success: false,
                 message: 'Usuário não encontrado'

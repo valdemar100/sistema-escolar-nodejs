@@ -75,7 +75,12 @@ router.post('/', async (req, res) => {
             });
         }
 
-        const novoProfessor = await professorQueries.create(nome, disciplina, email || '', telefone || '');
+        const novoProfessor = await professorQueries.create({ 
+            nome, 
+            materia: disciplina, 
+            email: email || '', 
+            telefone: telefone || '' 
+        });
         res.status(201).json({
             success: true,
             message: 'Professor criado com sucesso',
@@ -104,9 +109,14 @@ router.put('/:id', async (req, res) => {
             });
         }
 
-        const resultado = await professorQueries.update(id, nome, disciplina, email || '', telefone || '');
+        const resultado = await professorQueries.update(id, { 
+            nome, 
+            materia: disciplina, 
+            email: email || '', 
+            telefone: telefone || '' 
+        });
         
-        if (resultado.changes === 0) {
+        if (!resultado) {
             return res.status(404).json({
                 success: false,
                 message: 'Professor não encontrado'
@@ -115,7 +125,8 @@ router.put('/:id', async (req, res) => {
 
         res.json({
             success: true,
-            message: 'Professor atualizado com sucesso'
+            message: 'Professor atualizado com sucesso',
+            data: resultado
         });
     } catch (error) {
         console.error('Erro ao atualizar professor:', error);
@@ -133,7 +144,7 @@ router.delete('/:id', async (req, res) => {
         
         const resultado = await professorQueries.delete(id);
         
-        if (resultado.changes === 0) {
+        if (!resultado) {
             return res.status(404).json({
                 success: false,
                 message: 'Professor não encontrado'

@@ -84,7 +84,13 @@ router.post('/', async (req, res) => {
             });
         }
 
-        const novoAluno = await alunoQueries.create(nome, dataNascimento, serieTurma, email || '', telefone || '');
+        const novoAluno = await alunoQueries.create({ 
+            nome, 
+            data_nascimento: dataNascimento, 
+            serie_turma: serieTurma, 
+            email: email || '', 
+            telefone: telefone || '' 
+        });
         res.status(201).json({
             success: true,
             message: 'Aluno criado com sucesso',
@@ -122,9 +128,15 @@ router.put('/:id', async (req, res) => {
             });
         }
 
-        const resultado = await alunoQueries.update(id, nome, dataNascimento, serieTurma, email || '', telefone || '');
+        const resultado = await alunoQueries.update(id, { 
+            nome, 
+            data_nascimento: dataNascimento, 
+            serie_turma: serieTurma, 
+            email: email || '', 
+            telefone: telefone || '' 
+        });
         
-        if (resultado.changes === 0) {
+        if (!resultado) {
             return res.status(404).json({
                 success: false,
                 message: 'Aluno não encontrado'
@@ -133,7 +145,8 @@ router.put('/:id', async (req, res) => {
 
         res.json({
             success: true,
-            message: 'Aluno atualizado com sucesso'
+            message: 'Aluno atualizado com sucesso',
+            data: resultado
         });
     } catch (error) {
         console.error('Erro ao atualizar aluno:', error);
@@ -151,7 +164,7 @@ router.delete('/:id', async (req, res) => {
         
         const resultado = await alunoQueries.delete(id);
         
-        if (resultado.changes === 0) {
+        if (!resultado) {
             return res.status(404).json({
                 success: false,
                 message: 'Aluno não encontrado'

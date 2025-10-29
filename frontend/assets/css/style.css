@@ -180,6 +180,7 @@ body {
 .btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
@@ -191,12 +192,64 @@ body {
     gap: 8px;
 }
 
+/* Botão de login menor e centralizado */
+.btn-login {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    width: auto;
+    margin: 0 auto;
+}
+
 .btn-primary {
     background-color: var(--primary);
     color: var(--white);
 }
 
 .btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Estilo específico para botão de login */
+.btn-login.btn-primary {
+    background-color: var(--primary);
+    color: var(--white);
+    min-width: 140px;
+}
+
+.btn-login.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Estilo específico para botões de ação pequenos (cabeçalhos) */
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    min-width: auto;
+    width: auto;
+    margin-left: 20px;
+}
+
+.btn-sm.btn-primary {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 8px 16px;
+    font-size: 0.875rem;
+}
+
+.btn-sm.btn-primary:hover {
     background-color: var(--primary-dark);
     transform: translateY(-1px);
     box-shadow: var(--shadow-lg);

@@ -130,10 +130,16 @@ app.use((error, req, res, next) => {
 
 // Middleware para rotas não encontradas
 app.use((req, res) => {
-    res.status(404).json({
-        success: false,
-        message: 'Rota não encontrada'
-    });
+    // Se for uma requisição para API, retorna JSON
+    if (req.url.startsWith('/api/')) {
+        res.status(404).json({
+            success: false,
+            message: 'Rota não encontrada'
+        });
+    } else {
+        // Para outras rotas, redireciona para a página de login
+        res.redirect('/');
+    }
 });
 
 // Inicializar banco de dados e servidor

@@ -4,7 +4,7 @@
   "description": "Sistema escolar completo com front-end e back-end - Valdemar Sistemas",
   "main": "backend/server.js",
   "scripts": {
-    "start": "node scripts/start.js",
+    "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
     "server": "node backend/server.js",
     "init-db": "node backend/db/database.js",

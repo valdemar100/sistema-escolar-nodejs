@@ -1,216 +1,167 @@
 const { Pool } = require('pg');
 
-// Configuração do banco PostgreSQL para produção
+// Verificar se está em produção
 const isProduction = process.env.VERCEL || process.env.NODE_ENV === 'production';
 
-let db;
+console.log('🔍 Ambiente detectado:', isProduction ? 'PRODUÇÃO' : 'DESENVOLVIMENTO');
+
+let pool;
 
 if (isProduction) {
-    // Configuração PostgreSQL para produção
-    console.log('🌐 Configurando PostgreSQL para produção...');
+    console.log('🌐 Configurando PostgreSQL...');
+    console.log('DATABASE_URL existe:', !!process.env.DATABASE_URL);
     
-    if (!process.env.DATABASE_URL) {
-        console.error('❌ DATABASE_URL não encontrada');
+    if (process.env.DATABASE_URL) {
+        pool = new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: { rejectUnauthorized: false }
+        });
+        console.log('✅ Pool PostgreSQL criado');
     } else {
-        console.log('✅ DATABASE_URL encontrada');
-        try {
-            db = new Pool({
-                connectionString: process.env.DATABASE_URL,
-                ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
-            });
-            console.log('✅ Pool PostgreSQL configurado');
-        } catch (error) {
-            console.error('❌ Erro ao configurar PostgreSQL:', error);
-        }
+        console.error('❌ DATABASE_URL não encontrada');
     }
 } else {
-    // Usar SQLite local para desenvolvimento
-    console.log('🏠 Configurando SQLite para desenvolvimento...');
-    const sqlite3 = require('sqlite3').verbose();
-    const path = require('path');
-    const dbPath = path.join(__dirname, 'escola.db');
-    
-    db = new sqlite3.Database(dbPath, (err) => {
-        if (err) {
-            console.error('Erro ao conectar com o banco de dados:', err.message);
-        } else {
-            console.log('Conectado ao banco SQLite com sucesso!');
-        }
-    });
+    console.log('🏠 Usando SQLite local');
 }
 
-// Função para executar queries compatível com ambos os bancos
-const query = (sql, params = []) => {
-    return new Promise((resolve, reject) => {
-        if (isProduction) {
-            // PostgreSQL
-            if (!db) {
-                reject(new Error('Conexão com banco PostgreSQL não estabelecida'));
-                return;
-            }
-            db.query(sql, params, (err, result) => {
-                if (err) {
-                    console.error('Erro PostgreSQL:', err);
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        } else {
-            // SQLite
-            if (sql.includes('INSERT') || sql.includes('UPDATE') || sql.includes('DELETE')) {
-                db.run(sql, params, function(err) {
-                    if (err) reject(err);
-                    else resolve({ 
-                        rows: [], 
-                        rowCount: this.changes,
-                        lastID: this.lastID 
-                    });
-                });
-            } else {
-                db.all(sql, params, (err, rows) => {
-                    if (err) reject(err);
-                    else resolve({ rows, rowCount: rows.length });
-                });
-            }
+// Função simples para executar queries
+const executeQuery = async (sql, params = []) => {
+    if (isProduction && pool) {
+        try {
+            console.log('🔍 Executando query PostgreSQL:', sql);
+            console.log('🔍 Parâmetros:', params);
+            const result = await pool.query(sql, params);
+            console.log('✅ Query executada, linhas retornadas:', result.rows.length);
+            return result;
+        } catch (error) {
+            console.error('❌ Erro PostgreSQL:', error.message);
+            throw error;
         }
-    });
-};
-
-// Função para inicializar as tabelas
-const initDatabase = async () => {
-    try {
-        if (isProduction) {
-            console.log('🌐 Inicializando banco PostgreSQL...');
-            console.log('DATABASE_URL configurada:', !!process.env.DATABASE_URL);
-            
-            if (!process.env.DATABASE_URL) {
-                throw new Error('DATABASE_URL não está configurada');
-            }
-            
-            // Criar tabelas PostgreSQL
-            await query(`
-                CREATE TABLE IF NOT EXISTS usuarios (
-                    id SERIAL PRIMARY KEY,
-                    nome VARCHAR(255) NOT NULL,
-                    email VARCHAR(255) UNIQUE NOT NULL,
-                    senha VARCHAR(255) NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            `);
-            console.log('✅ Tabela usuarios criada');
-
-            await query(`
-                CREATE TABLE IF NOT EXISTS alunos (
-                    id SERIAL PRIMARY KEY,
-                    nome VARCHAR(255) NOT NULL,
-                    data_nascimento DATE NOT NULL,
-                    serie_turma VARCHAR(100) NOT NULL,
-                    email VARCHAR(255),
-                    telefone VARCHAR(20),
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            `);
-            console.log('✅ Tabela alunos criada');
-
-            await query(`
-                CREATE TABLE IF NOT EXISTS professores (
-                    id SERIAL PRIMARY KEY,
-                    nome VARCHAR(255) NOT NULL,
-                    disciplina VARCHAR(100) NOT NULL,
-                    email VARCHAR(255),
-                    telefone VARCHAR(20),
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            `);
-            console.log('✅ Tabela professores criada');
-
-            // Inserir usuário admin se não existir
-            try {
-                const adminExists = await query('SELECT id FROM usuarios WHERE email = $1', ['admin@escola.com']);
-                if (adminExists.rows.length === 0) {
-                    await query(
-                        'INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3)',
-                        ['Administrador', 'admin@escola.com', '123456']
-                    );
-                    console.log('✅ Usuário admin criado');
-                } else {
-                    console.log('✅ Usuário admin já existe');
-                }
-            } catch (adminError) {
-                console.log('⚠️ Erro ao criar admin (pode já existir):', adminError.message);
-            }
-
-            console.log('✅ Banco PostgreSQL configurado!');
-        } else {
-            // Usar a função SQLite existente
-            console.log('🏠 Usando SQLite local');
-            const sqliteDb = require('./database');
-            await sqliteDb.initDatabase();
-        }
-    } catch (error) {
-        console.error('❌ Erro ao inicializar banco:', error);
-        // Não fazer throw para não quebrar a aplicação
-        console.log('🔄 Continuando sem banco inicializado...');
+    } else {
+        throw new Error('Pool PostgreSQL não disponível');
     }
 };
 
-// Funções para usuários compatíveis com ambos os bancos
+// Inicializar database
+const initDatabase = async () => {
+    if (!isProduction) {
+        console.log('🏠 Usando database.js local');
+        const localDb = require('./database');
+        return await localDb.initDatabase();
+    }
+
+    try {
+        console.log('🌐 Inicializando PostgreSQL...');
+        
+        // Testar conexão
+        await executeQuery('SELECT NOW()');
+        console.log('✅ Conexão PostgreSQL OK');
+
+        // Criar tabelas
+        await executeQuery(`
+            CREATE TABLE IF NOT EXISTS usuarios (
+                id SERIAL PRIMARY KEY,
+                nome VARCHAR(255) NOT NULL,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                senha VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('✅ Tabela usuarios OK');
+
+        await executeQuery(`
+            CREATE TABLE IF NOT EXISTS alunos (
+                id SERIAL PRIMARY KEY,
+                nome VARCHAR(255) NOT NULL,
+                data_nascimento DATE NOT NULL,
+                serie_turma VARCHAR(100) NOT NULL,
+                email VARCHAR(255),
+                telefone VARCHAR(20),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('✅ Tabela alunos OK');
+
+        await executeQuery(`
+            CREATE TABLE IF NOT EXISTS professores (
+                id SERIAL PRIMARY KEY,
+                nome VARCHAR(255) NOT NULL,
+                disciplina VARCHAR(100) NOT NULL,
+                email VARCHAR(255),
+                telefone VARCHAR(20),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('✅ Tabela professores OK');
+
+        // Criar usuário admin
+        try {
+            const adminCheck = await executeQuery('SELECT id FROM usuarios WHERE email = $1', ['admin@escola.com']);
+            if (adminCheck.rows.length === 0) {
+                await executeQuery(
+                    'INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3)',
+                    ['Administrador', 'admin@escola.com', '123456']
+                );
+                console.log('✅ Admin criado');
+            } else {
+                console.log('✅ Admin já existe');
+            }
+        } catch (adminError) {
+            console.log('⚠️ Erro admin:', adminError.message);
+        }
+
+        console.log('🎉 Database inicializado com sucesso!');
+    } catch (error) {
+        console.error('❌ Erro ao inicializar database:', error);
+        // Não fazer throw para não quebrar o servidor
+    }
+};
+
+// Queries simplificadas
 const usuarioQueries = {
     getAll: async () => {
-        const result = await query(
-            isProduction 
-                ? 'SELECT * FROM usuarios ORDER BY nome'
-                : 'SELECT * FROM usuarios ORDER BY nome'
-        );
-        return result.rows;
+        if (isProduction) {
+            const result = await executeQuery('SELECT * FROM usuarios ORDER BY nome');
+            return result.rows;
+        } else {
+            const localDb = require('./database');
+            return await localDb.usuarioQueries.getAll();
+        }
     },
 
     getById: async (id) => {
-        const result = await query(
-            isProduction 
-                ? 'SELECT * FROM usuarios WHERE id = $1'
-                : 'SELECT * FROM usuarios WHERE id = ?',
-            [id]
-        );
-        return result.rows[0] || null;
+        if (isProduction) {
+            const result = await executeQuery('SELECT * FROM usuarios WHERE id = $1', [id]);
+            return result.rows[0] || null;
+        } else {
+            const localDb = require('./database');
+            return await localDb.usuarioQueries.getById(id);
+        }
     },
 
     getByEmail: async (email) => {
-        const result = await query(
-            isProduction 
-                ? 'SELECT * FROM usuarios WHERE email = $1'
-                : 'SELECT * FROM usuarios WHERE email = ?',
-            [email]
-        );
-        return result.rows[0] || null;
+        if (isProduction) {
+            const result = await executeQuery('SELECT * FROM usuarios WHERE email = $1', [email]);
+            return result.rows[0] || null;
+        } else {
+            const localDb = require('./database');
+            return await localDb.usuarioQueries.getByEmail(email);
+        }
     },
 
     create: async (nome, email, senha) => {
-        try {
-            console.log('Criando usuário:', { nome, email, isProduction });
-            if (isProduction) {
-                const result = await query(
-                    'INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3) RETURNING *',
-                    [nome, email, senha]
-                );
-                console.log('Usuário criado (PostgreSQL):', result.rows[0]);
-                return result.rows[0];
-            } else {
-                const result = await query(
-                    'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)',
-                    [nome, email, senha]
-                );
-                const usuario = { id: result.lastID, nome, email, senha };
-                console.log('Usuário criado (SQLite):', usuario);
-                return usuario;
-            }
-        } catch (error) {
-            console.error('Erro ao criar usuário:', error);
-            throw error;
+        if (isProduction) {
+            const result = await executeQuery(
+                'INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3) RETURNING *',
+                [nome, email, senha]
+            );
+            return result.rows[0];
+        } else {
+            const localDb = require('./database');
+            return await localDb.usuarioQueries.create(nome, email, senha);
         }
     },
 
@@ -227,169 +178,170 @@ const usuarioQueries = {
                 params.push(id);
             }
             
-            const result = await query(sql, params);
+            const result = await executeQuery(sql, params);
             return { changes: result.rowCount };
         } else {
-            let sql = 'UPDATE usuarios SET nome = ?, email = ?, updated_at = CURRENT_TIMESTAMP';
-            let params = [nome, email];
-            
-            if (senha) {
-                sql += ', senha = ? WHERE id = ?';
-                params.push(senha, id);
-            } else {
-                sql += ' WHERE id = ?';
-                params.push(id);
-            }
-            
-            const result = await query(sql, params);
-            return { changes: result.rowCount };
+            const localDb = require('./database');
+            return await localDb.usuarioQueries.update(id, nome, email, senha);
         }
     },
 
     delete: async (id) => {
-        const result = await query(
-            isProduction 
-                ? 'DELETE FROM usuarios WHERE id = $1'
-                : 'DELETE FROM usuarios WHERE id = ?',
-            [id]
-        );
-        return { changes: result.rowCount };
+        if (isProduction) {
+            const result = await executeQuery('DELETE FROM usuarios WHERE id = $1', [id]);
+            return { changes: result.rowCount };
+        } else {
+            const localDb = require('./database');
+            return await localDb.usuarioQueries.delete(id);
+        }
     },
 
     count: async () => {
-        const result = await query('SELECT COUNT(*) as total FROM usuarios');
-        return isProduction ? parseInt(result.rows[0].count) : result.rows[0].total;
+        if (isProduction) {
+            const result = await executeQuery('SELECT COUNT(*) as count FROM usuarios');
+            return parseInt(result.rows[0].count);
+        } else {
+            const localDb = require('./database');
+            return await localDb.usuarioQueries.count();
+        }
     }
 };
 
-// Funções similares para alunos e professores...
 const alunoQueries = {
     getAll: async () => {
-        const result = await query('SELECT * FROM alunos ORDER BY nome');
-        return result.rows;
+        if (isProduction) {
+            const result = await executeQuery('SELECT * FROM alunos ORDER BY nome');
+            return result.rows;
+        } else {
+            const localDb = require('./database');
+            return await localDb.alunoQueries.getAll();
+        }
     },
 
     getById: async (id) => {
-        const result = await query(
-            isProduction 
-                ? 'SELECT * FROM alunos WHERE id = $1'
-                : 'SELECT * FROM alunos WHERE id = ?',
-            [id]
-        );
-        return result.rows[0] || null;
+        if (isProduction) {
+            const result = await executeQuery('SELECT * FROM alunos WHERE id = $1', [id]);
+            return result.rows[0] || null;
+        } else {
+            const localDb = require('./database');
+            return await localDb.alunoQueries.getById(id);
+        }
     },
 
     create: async (nome, dataNascimento, serieTurma, email, telefone) => {
-        try {
-            console.log('Criando aluno:', { nome, dataNascimento, serieTurma, isProduction });
-            if (isProduction) {
-                const result = await query(
-                    'INSERT INTO alunos (nome, data_nascimento, serie_turma, email, telefone) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                    [nome, dataNascimento, serieTurma, email || '', telefone || '']
-                );
-                console.log('Aluno criado (PostgreSQL):', result.rows[0]);
-                return result.rows[0];
-            } else {
-                const result = await query(
-                    'INSERT INTO alunos (nome, data_nascimento, serie_turma, email, telefone) VALUES (?, ?, ?, ?, ?)',
-                    [nome, dataNascimento, serieTurma, email || '', telefone || '']
-                );
-                const aluno = { id: result.lastID, nome, data_nascimento: dataNascimento, serie_turma: serieTurma, email, telefone };
-                console.log('Aluno criado (SQLite):', aluno);
-                return aluno;
-            }
-        } catch (error) {
-            console.error('Erro ao criar aluno:', error);
-            throw error;
+        if (isProduction) {
+            const result = await executeQuery(
+                'INSERT INTO alunos (nome, data_nascimento, serie_turma, email, telefone) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+                [nome, dataNascimento, serieTurma, email || '', telefone || '']
+            );
+            return result.rows[0];
+        } else {
+            const localDb = require('./database');
+            return await localDb.alunoQueries.create(nome, dataNascimento, serieTurma, email, telefone);
         }
     },
 
     update: async (id, nome, dataNascimento, serieTurma, email, telefone) => {
-        const result = await query(
-            isProduction 
-                ? 'UPDATE alunos SET nome = $1, data_nascimento = $2, serie_turma = $3, email = $4, telefone = $5, updated_at = CURRENT_TIMESTAMP WHERE id = $6'
-                : 'UPDATE alunos SET nome = ?, data_nascimento = ?, serie_turma = ?, email = ?, telefone = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-            [nome, dataNascimento, serieTurma, email, telefone, id]
-        );
-        return { changes: result.rowCount };
+        if (isProduction) {
+            const result = await executeQuery(
+                'UPDATE alunos SET nome = $1, data_nascimento = $2, serie_turma = $3, email = $4, telefone = $5, updated_at = CURRENT_TIMESTAMP WHERE id = $6',
+                [nome, dataNascimento, serieTurma, email || '', telefone || '', id]
+            );
+            return { changes: result.rowCount };
+        } else {
+            const localDb = require('./database');
+            return await localDb.alunoQueries.update(id, nome, dataNascimento, serieTurma, email, telefone);
+        }
     },
 
     delete: async (id) => {
-        const result = await query(
-            isProduction 
-                ? 'DELETE FROM alunos WHERE id = $1'
-                : 'DELETE FROM alunos WHERE id = ?',
-            [id]
-        );
-        return { changes: result.rowCount };
+        if (isProduction) {
+            const result = await executeQuery('DELETE FROM alunos WHERE id = $1', [id]);
+            return { changes: result.rowCount };
+        } else {
+            const localDb = require('./database');
+            return await localDb.alunoQueries.delete(id);
+        }
     },
 
     count: async () => {
-        const result = await query('SELECT COUNT(*) as total FROM alunos');
-        return isProduction ? parseInt(result.rows[0].count) : result.rows[0].total;
+        if (isProduction) {
+            const result = await executeQuery('SELECT COUNT(*) as count FROM alunos');
+            return parseInt(result.rows[0].count);
+        } else {
+            const localDb = require('./database');
+            return await localDb.alunoQueries.count();
+        }
     }
 };
 
 const professorQueries = {
     getAll: async () => {
-        const result = await query('SELECT * FROM professores ORDER BY nome');
-        return result.rows;
+        if (isProduction) {
+            const result = await executeQuery('SELECT * FROM professores ORDER BY nome');
+            return result.rows;
+        } else {
+            const localDb = require('./database');
+            return await localDb.professorQueries.getAll();
+        }
     },
 
     getById: async (id) => {
-        const result = await query(
-            isProduction 
-                ? 'SELECT * FROM professores WHERE id = $1'
-                : 'SELECT * FROM professores WHERE id = ?',
-            [id]
-        );
-        return result.rows[0] || null;
+        if (isProduction) {
+            const result = await executeQuery('SELECT * FROM professores WHERE id = $1', [id]);
+            return result.rows[0] || null;
+        } else {
+            const localDb = require('./database');
+            return await localDb.professorQueries.getById(id);
+        }
     },
 
     create: async (nome, disciplina, email, telefone) => {
-        try {
-            if (isProduction) {
-                const result = await query(
-                    'INSERT INTO professores (nome, disciplina, email, telefone) VALUES ($1, $2, $3, $4) RETURNING *',
-                    [nome, disciplina, email || '', telefone || '']
-                );
-                return result.rows[0];
-            } else {
-                const result = await query(
-                    'INSERT INTO professores (nome, disciplina, email, telefone) VALUES (?, ?, ?, ?)',
-                    [nome, disciplina, email || '', telefone || '']
-                );
-                return { id: result.lastID, nome, disciplina, email, telefone };
-            }
-        } catch (error) {
-            console.error('Erro ao criar professor:', error);
-            throw error;
+        if (isProduction) {
+            console.log('🔍 Criando professor PostgreSQL:', { nome, disciplina, email, telefone });
+            const result = await executeQuery(
+                'INSERT INTO professores (nome, disciplina, email, telefone) VALUES ($1, $2, $3, $4) RETURNING *',
+                [nome, disciplina, email || '', telefone || '']
+            );
+            console.log('✅ Professor criado:', result.rows[0]);
+            return result.rows[0];
+        } else {
+            const localDb = require('./database');
+            return await localDb.professorQueries.create(nome, disciplina, email, telefone);
         }
     },
 
     update: async (id, nome, disciplina, email, telefone) => {
-        const result = await query(
-            isProduction 
-                ? 'UPDATE professores SET nome = $1, disciplina = $2, email = $3, telefone = $4, updated_at = CURRENT_TIMESTAMP WHERE id = $5'
-                : 'UPDATE professores SET nome = ?, disciplina = ?, email = ?, telefone = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-            [nome, disciplina, email, telefone, id]
-        );
-        return { changes: result.rowCount };
+        if (isProduction) {
+            const result = await executeQuery(
+                'UPDATE professores SET nome = $1, disciplina = $2, email = $3, telefone = $4, updated_at = CURRENT_TIMESTAMP WHERE id = $5',
+                [nome, disciplina, email || '', telefone || '', id]
+            );
+            return { changes: result.rowCount };
+        } else {
+            const localDb = require('./database');
+            return await localDb.professorQueries.update(id, nome, disciplina, email, telefone);
+        }
     },
 
     delete: async (id) => {
-        const result = await query(
-            isProduction 
-                ? 'DELETE FROM professores WHERE id = $1'
-                : 'DELETE FROM professores WHERE id = ?',
-            [id]
-        );
-        return { changes: result.rowCount };
+        if (isProduction) {
+            const result = await executeQuery('DELETE FROM professores WHERE id = $1', [id]);
+            return { changes: result.rowCount };
+        } else {
+            const localDb = require('./database');
+            return await localDb.professorQueries.delete(id);
+        }
     },
 
     count: async () => {
-        const result = await query('SELECT COUNT(*) as total FROM professores');
-        return isProduction ? parseInt(result.rows[0].count) : result.rows[0].total;
+        if (isProduction) {
+            const result = await executeQuery('SELECT COUNT(*) as count FROM professores');
+            return parseInt(result.rows[0].count);
+        } else {
+            const localDb = require('./database');
+            return await localDb.professorQueries.count();
+        }
     }
 };
 

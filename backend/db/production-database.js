@@ -10,13 +10,23 @@ let pool;
 if (isProduction) {
     console.log('🌐 Configurando PostgreSQL...');
     console.log('DATABASE_URL existe:', !!process.env.DATABASE_URL);
+    console.log('DATABASE_URL length:', process.env.DATABASE_URL?.length);
+    console.log('DATABASE_URL preview:', process.env.DATABASE_URL?.substring(0, 50) + '...');
     
     if (process.env.DATABASE_URL) {
-        pool = new Pool({
-            connectionString: process.env.DATABASE_URL,
-            ssl: { rejectUnauthorized: false }
-        });
-        console.log('✅ Pool PostgreSQL criado');
+        try {
+            // Limpar a string de possíveis caracteres ocultos
+            const cleanUrl = process.env.DATABASE_URL.trim();
+            console.log('URL limpa preview:', cleanUrl.substring(0, 50) + '...');
+            
+            pool = new Pool({
+                connectionString: cleanUrl,
+                ssl: { rejectUnauthorized: false }
+            });
+            console.log('✅ Pool PostgreSQL criado');
+        } catch (poolError) {
+            console.error('❌ Erro ao criar pool:', poolError.message);
+        }
     } else {
         console.error('❌ DATABASE_URL não encontrada');
     }
@@ -28,17 +38,22 @@ if (isProduction) {
 const executeQuery = async (sql, params = []) => {
     if (isProduction && pool) {
         try {
-            console.log('🔍 Executando query PostgreSQL:', sql);
+            console.log('🔍 Executando query PostgreSQL:', sql.substring(0, 100));
             console.log('🔍 Parâmetros:', params);
+            console.log('🔍 Pool config:', pool.options?.connectionString?.substring(0, 50) + '...');
+            
             const result = await pool.query(sql, params);
             console.log('✅ Query executada, linhas retornadas:', result.rows.length);
             return result;
         } catch (error) {
-            console.error('❌ Erro PostgreSQL:', error.message);
+            console.error('❌ Erro PostgreSQL completo:', error);
+            console.error('❌ Erro message:', error.message);
+            console.error('❌ Erro code:', error.code);
+            console.error('❌ Erro hostname:', error.hostname);
             throw error;
         }
     } else {
-        throw new Error('Pool PostgreSQL não disponível');
+        throw new Error('Pool PostgreSQL não disponível ou não é produção');
     }
 };
 

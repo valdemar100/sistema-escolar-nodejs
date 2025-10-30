@@ -1,18 +1,31 @@
 const { Pool } = require('pg');
 
 // Configuração do banco PostgreSQL para produção
-const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
+const isProduction = process.env.VERCEL || process.env.NODE_ENV === 'production';
 
 let db;
 
 if (isProduction) {
     // Configuração PostgreSQL para produção
-    db = new Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
-    });
+    console.log('🌐 Configurando PostgreSQL para produção...');
+    
+    if (!process.env.DATABASE_URL) {
+        console.error('❌ DATABASE_URL não encontrada');
+    } else {
+        console.log('✅ DATABASE_URL encontrada');
+        try {
+            db = new Pool({
+                connectionString: process.env.DATABASE_URL,
+                ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
+            });
+            console.log('✅ Pool PostgreSQL configurado');
+        } catch (error) {
+            console.error('❌ Erro ao configurar PostgreSQL:', error);
+        }
+    }
 } else {
     // Usar SQLite local para desenvolvimento
+    console.log('🏠 Configurando SQLite para desenvolvimento...');
     const sqlite3 = require('sqlite3').verbose();
     const path = require('path');
     const dbPath = path.join(__dirname, 'escola.db');
@@ -31,9 +44,17 @@ const query = (sql, params = []) => {
     return new Promise((resolve, reject) => {
         if (isProduction) {
             // PostgreSQL
+            if (!db) {
+                reject(new Error('Conexão com banco PostgreSQL não estabelecida'));
+                return;
+            }
             db.query(sql, params, (err, result) => {
-                if (err) reject(err);
-                else resolve(result);
+                if (err) {
+                    console.error('Erro PostgreSQL:', err);
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
             });
         } else {
             // SQLite
@@ -61,6 +82,11 @@ const initDatabase = async () => {
     try {
         if (isProduction) {
             console.log('🌐 Inicializando banco PostgreSQL...');
+            console.log('DATABASE_URL configurada:', !!process.env.DATABASE_URL);
+            
+            if (!process.env.DATABASE_URL) {
+                throw new Error('DATABASE_URL não está configurada');
+            }
             
             // Criar tabelas PostgreSQL
             await query(`
@@ -73,6 +99,7 @@ const initDatabase = async () => {
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             `);
+            console.log('✅ Tabela usuarios criada');
 
             await query(`
                 CREATE TABLE IF NOT EXISTS alunos (
@@ -86,6 +113,7 @@ const initDatabase = async () => {
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             `);
+            console.log('✅ Tabela alunos criada');
 
             await query(`
                 CREATE TABLE IF NOT EXISTS professores (
@@ -98,25 +126,35 @@ const initDatabase = async () => {
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             `);
+            console.log('✅ Tabela professores criada');
 
             // Inserir usuário admin se não existir
-            const adminExists = await query('SELECT id FROM usuarios WHERE email = $1', ['admin@escola.com']);
-            if (adminExists.rows.length === 0) {
-                await query(
-                    'INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3)',
-                    ['Administrador', 'admin@escola.com', '123456']
-                );
+            try {
+                const adminExists = await query('SELECT id FROM usuarios WHERE email = $1', ['admin@escola.com']);
+                if (adminExists.rows.length === 0) {
+                    await query(
+                        'INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3)',
+                        ['Administrador', 'admin@escola.com', '123456']
+                    );
+                    console.log('✅ Usuário admin criado');
+                } else {
+                    console.log('✅ Usuário admin já existe');
+                }
+            } catch (adminError) {
+                console.log('⚠️ Erro ao criar admin (pode já existir):', adminError.message);
             }
 
             console.log('✅ Banco PostgreSQL configurado!');
         } else {
             // Usar a função SQLite existente
+            console.log('🏠 Usando SQLite local');
             const sqliteDb = require('./database');
             await sqliteDb.initDatabase();
         }
     } catch (error) {
-        console.error('Erro ao inicializar banco:', error);
-        throw error;
+        console.error('❌ Erro ao inicializar banco:', error);
+        // Não fazer throw para não quebrar a aplicação
+        console.log('🔄 Continuando sem banco inicializado...');
     }
 };
 

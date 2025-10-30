@@ -17,15 +17,43 @@ if (isProduction) {
         try {
             // Limpar a string de possíveis caracteres ocultos
             const cleanUrl = process.env.DATABASE_URL.trim();
-            console.log('URL limpa preview:', cleanUrl.substring(0, 50) + '...');
+            console.log('🧹 URL limpa preview:', cleanUrl.substring(0, 50) + '...');
+            console.log('🧹 URL limpa length:', cleanUrl.length);
+            console.log('🧹 URL completa para debug:', cleanUrl);
             
-            pool = new Pool({
-                connectionString: cleanUrl,
-                ssl: { rejectUnauthorized: false }
-            });
-            console.log('✅ Pool PostgreSQL criado');
+            // Tentar configuração alternativa se a URL estiver problemática
+            if (cleanUrl.includes('postgresql://') && cleanUrl.includes('neon.tech')) {
+                pool = new Pool({
+                    connectionString: cleanUrl,
+                    ssl: { rejectUnauthorized: false }
+                });
+                console.log('✅ Pool PostgreSQL criado com connection string');
+            } else {
+                console.log('❌ Connection string parece inválida, tentando configuração manual');
+                // Fallback: usar configuração manual se possível
+                throw new Error('Connection string inválida');
+            }
         } catch (poolError) {
             console.error('❌ Erro ao criar pool:', poolError.message);
+            console.log('🔄 Tentando configuração alternativa...');
+            
+            // Tentar extrair partes da URL manualmente
+            try {
+                const url = new URL(process.env.DATABASE_URL.trim());
+                pool = new Pool({
+                    user: url.username,
+                    password: url.password,
+                    host: url.hostname,
+                    port: url.port || 5432,
+                    database: url.pathname.slice(1),
+                    ssl: { rejectUnauthorized: false }
+                });
+                console.log('✅ Pool PostgreSQL criado com configuração manual');
+                console.log('🔍 Host extraído:', url.hostname);
+                console.log('🔍 Database extraído:', url.pathname.slice(1));
+            } catch (urlError) {
+                console.error('❌ Erro na configuração alternativa:', urlError.message);
+            }
         }
     } else {
         console.error('❌ DATABASE_URL não encontrada');

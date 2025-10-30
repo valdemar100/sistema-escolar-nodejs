@@ -1,14 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-
-// Verificar se está em produção
-const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
-
-// Importar banco de dados apropriado
-const { initDatabase } = isProduction 
-    ? require('./db/production-database') 
-    : require('./db/database');
+const { initDatabase } = require('./db/database');
 
 // Importar rotas
 const usuariosRouter = require('./routes/usuarios');
@@ -45,10 +38,7 @@ app.post('/api/login', async (req, res) => {
             });
         }
 
-        const database = isProduction 
-            ? require('./db/production-database') 
-            : require('./db/database');
-        const { usuarioQueries } = database;
+        const { usuarioQueries } = require('./db/database');
         const usuario = await usuarioQueries.getByEmail(email);
 
         if (!usuario || usuario.senha !== senha) {
@@ -78,10 +68,7 @@ app.post('/api/login', async (req, res) => {
 // Rota para estatísticas do dashboard
 app.get('/api/dashboard', async (req, res) => {
     try {
-        const database = isProduction 
-            ? require('./db/production-database') 
-            : require('./db/database');
-        const { usuarioQueries, alunoQueries, professorQueries } = database;
+        const { usuarioQueries, alunoQueries, professorQueries } = require('./db/database');
         
         const [totalUsuarios, totalAlunos, totalProfessores] = await Promise.all([
             usuarioQueries.count(),

@@ -190,18 +190,27 @@ const usuarioQueries = {
     },
 
     create: async (nome, email, senha) => {
-        if (isProduction) {
-            const result = await query(
-                'INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3) RETURNING *',
-                [nome, email, senha]
-            );
-            return result.rows[0];
-        } else {
-            const result = await query(
-                'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)',
-                [nome, email, senha]
-            );
-            return { id: result.lastID, nome, email, senha };
+        try {
+            console.log('Criando usuário:', { nome, email, isProduction });
+            if (isProduction) {
+                const result = await query(
+                    'INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3) RETURNING *',
+                    [nome, email, senha]
+                );
+                console.log('Usuário criado (PostgreSQL):', result.rows[0]);
+                return result.rows[0];
+            } else {
+                const result = await query(
+                    'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)',
+                    [nome, email, senha]
+                );
+                const usuario = { id: result.lastID, nome, email, senha };
+                console.log('Usuário criado (SQLite):', usuario);
+                return usuario;
+            }
+        } catch (error) {
+            console.error('Erro ao criar usuário:', error);
+            throw error;
         }
     },
 
@@ -271,18 +280,27 @@ const alunoQueries = {
     },
 
     create: async (nome, dataNascimento, serieTurma, email, telefone) => {
-        if (isProduction) {
-            const result = await query(
-                'INSERT INTO alunos (nome, data_nascimento, serie_turma, email, telefone) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                [nome, dataNascimento, serieTurma, email, telefone]
-            );
-            return result.rows[0];
-        } else {
-            const result = await query(
-                'INSERT INTO alunos (nome, data_nascimento, serie_turma, email, telefone) VALUES (?, ?, ?, ?, ?)',
-                [nome, dataNascimento, serieTurma, email, telefone]
-            );
-            return { id: result.lastID, nome, data_nascimento: dataNascimento, serie_turma: serieTurma, email, telefone };
+        try {
+            console.log('Criando aluno:', { nome, dataNascimento, serieTurma, isProduction });
+            if (isProduction) {
+                const result = await query(
+                    'INSERT INTO alunos (nome, data_nascimento, serie_turma, email, telefone) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+                    [nome, dataNascimento, serieTurma, email || '', telefone || '']
+                );
+                console.log('Aluno criado (PostgreSQL):', result.rows[0]);
+                return result.rows[0];
+            } else {
+                const result = await query(
+                    'INSERT INTO alunos (nome, data_nascimento, serie_turma, email, telefone) VALUES (?, ?, ?, ?, ?)',
+                    [nome, dataNascimento, serieTurma, email || '', telefone || '']
+                );
+                const aluno = { id: result.lastID, nome, data_nascimento: dataNascimento, serie_turma: serieTurma, email, telefone };
+                console.log('Aluno criado (SQLite):', aluno);
+                return aluno;
+            }
+        } catch (error) {
+            console.error('Erro ao criar aluno:', error);
+            throw error;
         }
     },
 
@@ -329,18 +347,23 @@ const professorQueries = {
     },
 
     create: async (nome, disciplina, email, telefone) => {
-        if (isProduction) {
-            const result = await query(
-                'INSERT INTO professores (nome, disciplina, email, telefone) VALUES ($1, $2, $3, $4) RETURNING *',
-                [nome, disciplina, email, telefone]
-            );
-            return result.rows[0];
-        } else {
-            const result = await query(
-                'INSERT INTO professores (nome, disciplina, email, telefone) VALUES (?, ?, ?, ?)',
-                [nome, disciplina, email, telefone]
-            );
-            return { id: result.lastID, nome, disciplina, email, telefone };
+        try {
+            if (isProduction) {
+                const result = await query(
+                    'INSERT INTO professores (nome, disciplina, email, telefone) VALUES ($1, $2, $3, $4) RETURNING *',
+                    [nome, disciplina, email || '', telefone || '']
+                );
+                return result.rows[0];
+            } else {
+                const result = await query(
+                    'INSERT INTO professores (nome, disciplina, email, telefone) VALUES (?, ?, ?, ?)',
+                    [nome, disciplina, email || '', telefone || '']
+                );
+                return { id: result.lastID, nome, disciplina, email, telefone };
+            }
+        } catch (error) {
+            console.error('Erro ao criar professor:', error);
+            throw error;
         }
     },
 

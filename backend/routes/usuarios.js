@@ -1,13 +1,5 @@
 const express = require('express');
-
-// Verificar se está em produção
-const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
-
-// Importar banco de dados apropriado
-const database = isProduction 
-    ? require('../db/memory-database') 
-    : require('../db/database');
-const { usuarioQueries } = database;
+const { usuarioQueries } = require('../db/database');
 
 const router = express.Router();
 
@@ -83,7 +75,7 @@ router.post('/', async (req, res) => {
             });
         }
 
-        const novoUsuario = await usuarioQueries.create({ nome, email, senha });
+        const novoUsuario = await usuarioQueries.create(nome, email, senha);
         res.status(201).json({
             success: true,
             message: 'Usuário criado com sucesso',
@@ -138,9 +130,9 @@ router.put('/:id', async (req, res) => {
             });
         }
 
-        const resultado = await usuarioQueries.update(id, { nome, email, senha: senha || undefined });
+        const resultado = await usuarioQueries.update(id, nome, email, senha || null);
         
-        if (!resultado) {
+        if (resultado.changes === 0) {
             return res.status(404).json({
                 success: false,
                 message: 'Usuário não encontrado'
@@ -149,8 +141,7 @@ router.put('/:id', async (req, res) => {
 
         res.json({
             success: true,
-            message: 'Usuário atualizado com sucesso',
-            data: resultado
+            message: 'Usuário atualizado com sucesso'
         });
     } catch (error) {
         console.error('Erro ao atualizar usuário:', error);
@@ -168,7 +159,7 @@ router.delete('/:id', async (req, res) => {
         
         const resultado = await usuarioQueries.delete(id);
         
-        if (!resultado) {
+        if (resultado.changes === 0) {
             return res.status(404).json({
                 success: false,
                 message: 'Usuário não encontrado'

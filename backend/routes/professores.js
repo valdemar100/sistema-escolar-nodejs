@@ -1,13 +1,5 @@
 const express = require('express');
-
-// Verificar se está em produção
-const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
-
-// Importar banco de dados apropriado
-const database = isProduction 
-    ? require('../db/memory-database') 
-    : require('../db/database');
-const { professorQueries } = database;
+const { professorQueries } = require('../db/database');
 
 const router = express.Router();
 
@@ -75,12 +67,7 @@ router.post('/', async (req, res) => {
             });
         }
 
-        const novoProfessor = await professorQueries.create({ 
-            nome, 
-            materia: disciplina, 
-            email: email || '', 
-            telefone: telefone || '' 
-        });
+        const novoProfessor = await professorQueries.create(nome, disciplina, email || '', telefone || '');
         res.status(201).json({
             success: true,
             message: 'Professor criado com sucesso',
@@ -109,14 +96,9 @@ router.put('/:id', async (req, res) => {
             });
         }
 
-        const resultado = await professorQueries.update(id, { 
-            nome, 
-            materia: disciplina, 
-            email: email || '', 
-            telefone: telefone || '' 
-        });
+        const resultado = await professorQueries.update(id, nome, disciplina, email || '', telefone || '');
         
-        if (!resultado) {
+        if (resultado.changes === 0) {
             return res.status(404).json({
                 success: false,
                 message: 'Professor não encontrado'
@@ -125,8 +107,7 @@ router.put('/:id', async (req, res) => {
 
         res.json({
             success: true,
-            message: 'Professor atualizado com sucesso',
-            data: resultado
+            message: 'Professor atualizado com sucesso'
         });
     } catch (error) {
         console.error('Erro ao atualizar professor:', error);
@@ -144,7 +125,7 @@ router.delete('/:id', async (req, res) => {
         
         const resultado = await professorQueries.delete(id);
         
-        if (!resultado) {
+        if (resultado.changes === 0) {
             return res.status(404).json({
                 success: false,
                 message: 'Professor não encontrado'

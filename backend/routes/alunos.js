@@ -1,13 +1,5 @@
 const express = require('express');
-
-// Verificar se está em produção
-const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL;
-
-// Importar banco de dados apropriado
-const database = isProduction 
-    ? require('../db/memory-database') 
-    : require('../db/database');
-const { alunoQueries } = database;
+const { alunoQueries } = require('../db/database');
 
 const router = express.Router();
 
@@ -84,13 +76,7 @@ router.post('/', async (req, res) => {
             });
         }
 
-        const novoAluno = await alunoQueries.create({ 
-            nome, 
-            data_nascimento: dataNascimento, 
-            serie_turma: serieTurma, 
-            email: email || '', 
-            telefone: telefone || '' 
-        });
+        const novoAluno = await alunoQueries.create(nome, dataNascimento, serieTurma, email || '', telefone || '');
         res.status(201).json({
             success: true,
             message: 'Aluno criado com sucesso',
@@ -128,15 +114,9 @@ router.put('/:id', async (req, res) => {
             });
         }
 
-        const resultado = await alunoQueries.update(id, { 
-            nome, 
-            data_nascimento: dataNascimento, 
-            serie_turma: serieTurma, 
-            email: email || '', 
-            telefone: telefone || '' 
-        });
+        const resultado = await alunoQueries.update(id, nome, dataNascimento, serieTurma, email || '', telefone || '');
         
-        if (!resultado) {
+        if (resultado.changes === 0) {
             return res.status(404).json({
                 success: false,
                 message: 'Aluno não encontrado'
@@ -145,8 +125,7 @@ router.put('/:id', async (req, res) => {
 
         res.json({
             success: true,
-            message: 'Aluno atualizado com sucesso',
-            data: resultado
+            message: 'Aluno atualizado com sucesso'
         });
     } catch (error) {
         console.error('Erro ao atualizar aluno:', error);
@@ -164,7 +143,7 @@ router.delete('/:id', async (req, res) => {
         
         const resultado = await alunoQueries.delete(id);
         
-        if (!resultado) {
+        if (resultado.changes === 0) {
             return res.status(404).json({
                 success: false,
                 message: 'Aluno não encontrado'

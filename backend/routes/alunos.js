@@ -3,9 +3,35 @@ const { alunoQueries } = require('../db/database');
 
 const router = express.Router();
 
-// GET /api/alunos - Listar todos os alunos ou buscar por nome
+/**
+ * ============================================
+ * CADASTRO 2: ALUNOS - CRUD COMPLETO (1 ponto)
+ * ============================================
+ * 
+ * Estrutura idêntica ao cadastro de usuários, mas com campos específicos:
+ * - nome: Nome do aluno
+ * - email: Email do aluno
+ * - curso: Curso que está matriculado
+ * - matricula: Número de matrícula único
+ * 
+ * Operações CRUD:
+ * - LISTAR (GET): Busca todos os alunos ou filtra por nome
+ * - INCLUIR (POST): Cria novo aluno
+ * - EDITAR (PUT): Atualiza dados do aluno
+ * - EXCLUIR (DELETE): Remove aluno do banco
+ */
+
+/**
+ * LISTAR ALUNOS (READ/SELECT) - 0,25 pontos
+ * Rota: GET /api/alunos
+ * Função: Retorna todos os alunos ou busca por nome
+ * 
+ * Diferencial: Tem sistema de busca por nome (search query parameter)
+ * SQL: SELECT * FROM alunos ou SELECT * FROM alunos WHERE nome LIKE '%?%'
+ */
 router.get('/', async (req, res) => {
     try {
+        // Verifica se há parâmetro de busca na URL (?search=nome)
         const { search } = req.query;
         let alunos;
         

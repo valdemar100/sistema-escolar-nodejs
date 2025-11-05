@@ -26,11 +26,32 @@ app.use('/api/usuarios', usuariosRouter);
 app.use('/api/alunos', alunosRouter);
 app.use('/api/professores', professoresRouter);
 
-// Rota para login
+/**
+ * SISTEMA DE LOGIN - 1 ponto
+ * Rota: POST /api/login
+ * Função: Autentica usuário no sistema
+ * 
+ * Como funciona o LOGIN:
+ * 1. RECEBE os dados do formulário (email e senha) via req.body
+ * 2. VALIDA se email e senha foram fornecidos
+ * 3. BUSCA o usuário no banco pelo email usando getByEmail()
+ *    - Executa: SELECT * FROM usuarios WHERE email = ?
+ * 4. COMPARA a senha enviada com a senha armazenada no banco
+ * 5. Se INCORRETO: retorna erro 401 (não autorizado)
+ * 6. Se CORRETO:
+ *    - Remove a senha do objeto (segurança)
+ *    - Retorna sucesso com dados do usuário
+ *    - Frontend salva no localStorage
+ *    - Redireciona para dashboard
+ * 
+ * Segurança: Nunca retorna a senha na resposta
+ */
 app.post('/api/login', async (req, res) => {
     try {
+        // 1. Extrai email e senha enviados pelo formulário
         const { email, senha } = req.body;
         
+        // 2. VALIDAÇÃO: Verifica se foram fornecidos
         if (!email || !senha) {
             return res.status(400).json({ 
                 success: false, 
@@ -38,9 +59,11 @@ app.post('/api/login', async (req, res) => {
             });
         }
 
+        // 3. BUSCA usuário no banco de dados pelo email
         const { usuarioQueries } = require('./db/database');
         const usuario = await usuarioQueries.getByEmail(email);
 
+        // 4. VERIFICA se usuário existe E se a senha está correta
         if (!usuario || usuario.senha !== senha) {
             return res.status(401).json({ 
                 success: false, 
@@ -48,9 +71,11 @@ app.post('/api/login', async (req, res) => {
             });
         }
 
-        // Remover senha da resposta
+        // 5. SEGURANÇA: Remove a senha antes de enviar resposta
+        // Destructuring: pega senha e descarta, mantém o resto em usuarioSeguro
         const { senha: _, ...usuarioSeguro } = usuario;
         
+        // 6. Retorna SUCESSO com dados do usuário (sem senha)
         res.json({ 
             success: true, 
             message: 'Login realizado com sucesso',

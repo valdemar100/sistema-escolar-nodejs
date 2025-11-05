@@ -1,10 +1,33 @@
+/**
+ * ============================================
+ * BANCO DE DADOS - SQLite
+ * ============================================
+ * 
+ * Tecnologia: SQLite3 (banco de dados SQL leve e local)
+ * Arquivo do banco: escola.db
+ * 
+ * Por que SQLite?
+ * - Não precisa de servidor separado (MySQL, PostgreSQL)
+ * - Armazena tudo em um único arquivo .db
+ * - Perfeito para aplicações pequenas/médias
+ * - Funciona bem no Railway e outros hosts
+ * 
+ * Estrutura:
+ * - 3 tabelas principais (usuarios, alunos, professores)
+ * - Cada tabela com CRUD completo
+ * - Relacionamentos através de IDs
+ */
+
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 // Caminho para o arquivo do banco
 const dbPath = path.join(__dirname, 'escola.db');
 
-// Criar conexão com o banco
+/**
+ * CONEXÃO COM O BANCO
+ * Cria/abre o arquivo escola.db na pasta backend/db/
+ */
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Erro ao conectar com o banco de dados:', err.message);
@@ -13,11 +36,23 @@ const db = new sqlite3.Database(dbPath, (err) => {
     }
 });
 
-// Função para inicializar as tabelas
+/**
+ * INICIALIZAÇÃO DAS TABELAS
+ * Cria as tabelas se não existirem (CREATE TABLE IF NOT EXISTS)
+ */
 const initDatabase = () => {
     return new Promise((resolve, reject) => {
         db.serialize(() => {
-            // Tabela de usuários
+            /**
+             * TABELA: usuarios
+             * Campos:
+             * - id: Chave primária auto-incremento
+             * - nome: Nome completo do usuário
+             * - email: Email único (login)
+             * - senha: Senha (em texto puro - poderia usar hash)
+             * - created_at: Data de criação
+             * - updated_at: Data da última atualização
+             */
             db.run(`
                 CREATE TABLE IF NOT EXISTS usuarios (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,

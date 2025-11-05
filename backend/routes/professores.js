@@ -3,9 +3,35 @@ const { professorQueries } = require('../db/database');
 
 const router = express.Router();
 
-// GET /api/professores - Listar todos os professores ou buscar por termo
+/**
+ * ============================================
+ * CADASTRO 3: PROFESSORES - CRUD COMPLETO (1 ponto)
+ * ============================================
+ * 
+ * Estrutura idêntica aos outros cadastros, com campos específicos:
+ * - nome: Nome do professor
+ * - email: Email do professor
+ * - disciplina: Matéria que leciona
+ * - telefone: Telefone de contato
+ * 
+ * Operações CRUD:
+ * - LISTAR (GET): Busca todos os professores ou filtra por termo
+ * - INCLUIR (POST): Cria novo professor
+ * - EDITAR (PUT): Atualiza dados do professor
+ * - EXCLUIR (DELETE): Remove professor do banco
+ */
+
+/**
+ * LISTAR PROFESSORES (READ/SELECT) - 0,25 pontos
+ * Rota: GET /api/professores
+ * Função: Retorna todos os professores ou busca por nome/disciplina
+ * 
+ * Diferencial: Busca tanto no nome quanto na disciplina
+ * SQL: SELECT * FROM professores WHERE nome LIKE '%?%' OR disciplina LIKE '%?%'
+ */
 router.get('/', async (req, res) => {
     try {
+        // Verifica se há parâmetro de busca
         const { search } = req.query;
         let professores;
         

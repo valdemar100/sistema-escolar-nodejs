@@ -4,7 +4,7 @@ const { usuarioQueries } = require('../db/database');
 const router = express.Router();
 
 /**
- * LISTAR (READ/SELECT) - 0,25 pontos
+ * LISTAR (READ/SELECT)
  * Rota: GET /api/usuarios
  * Função: Retorna todos os usuários cadastrados no banco de dados
  * 
@@ -78,7 +78,7 @@ router.get('/:id', async (req, res) => {
 });
 
 /**
- * INCLUIR/CRIAR (CREATE/INSERT) - 0,25 pontos
+ * INCLUIR/CRIAR (CREATE/INSERT)
  * Rota: POST /api/usuarios
  * Função: Cria um novo usuário no banco de dados
  * 
@@ -142,7 +142,7 @@ router.post('/', async (req, res) => {
 });
 
 /**
- * EDITAR/ATUALIZAR (UPDATE) - 0,25 pontos
+ * EDITAR/ATUALIZAR (UPDATE)
  * Rota: PUT /api/usuarios/:id
  * Função: Atualiza os dados de um usuário existente
  * 
@@ -225,7 +225,7 @@ router.put('/:id', async (req, res) => {
 });
 
 /**
- * EXCLUIR/DELETAR (DELETE) - 0,25 pontos
+ * EXCLUIR/DELETAR (DELETE)
  * Rota: DELETE /api/usuarios/:id
  * Função: Remove um usuário do banco de dados
  * 

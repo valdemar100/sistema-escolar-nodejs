@@ -5,7 +5,7 @@ const router = express.Router();
 
 /**
  * ============================================
- * CADASTRO 3: PROFESSORES - CRUD COMPLETO (1 ponto)
+ * CADASTRO 3: PROFESSORES - CRUD COMPLETO
  * ============================================
  * 
  * Estrutura idêntica aos outros cadastros, com campos específicos:
@@ -22,7 +22,7 @@ const router = express.Router();
  */
 
 /**
- * LISTAR PROFESSORES (READ/SELECT) - 0,25 pontos
+ * LISTAR PROFESSORES (READ/SELECT)
  * Rota: GET /api/professores
  * Função: Retorna todos os professores ou busca por nome/disciplina
  * 

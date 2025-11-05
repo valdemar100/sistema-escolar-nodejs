@@ -5,7 +5,7 @@ const router = express.Router();
 
 /**
  * ============================================
- * CADASTRO 2: ALUNOS - CRUD COMPLETO (1 ponto)
+ * CADASTRO 2: ALUNOS - CRUD COMPLETO
  * ============================================
  * 
  * Estrutura idêntica ao cadastro de usuários, mas com campos específicos:
@@ -22,7 +22,7 @@ const router = express.Router();
  */
 
 /**
- * LISTAR ALUNOS (READ/SELECT) - 0,25 pontos
+ * LISTAR ALUNOS (READ/SELECT)
  * Rota: GET /api/alunos
  * Função: Retorna todos os alunos ou busca por nome
  * 

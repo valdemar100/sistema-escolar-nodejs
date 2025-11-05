@@ -27,7 +27,7 @@ app.use('/api/alunos', alunosRouter);
 app.use('/api/professores', professoresRouter);
 
 /**
- * SISTEMA DE LOGIN - 1 ponto
+ * SISTEMA DE LOGIN
  * Rota: POST /api/login
  * Função: Autentica usuário no sistema
  * 

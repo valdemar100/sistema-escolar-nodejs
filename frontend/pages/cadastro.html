@@ -1,48 +1,73 @@
 <!DOCTYPE html>
+<!-- Documento HTML5 -->
 <html lang="pt-BR">
 <head>
+    <!-- Codificação UTF-8 para português -->
     <meta charset="UTF-8">
+    <!-- Responsividade: adaptar para mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título que aparece na aba do navegador -->
     <title>Cadastro - Sistema Escolar</title>
+    <!-- Importa CSS com toda a estilização -->
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
+    <!-- Container principal da página -->
     <div class="login-container">
+        <!-- Card (cartão) com o formulário de cadastro -->
         <div class="login-card fade-in">
+            <!-- Cabeçalho -->
             <div class="login-header">
+                <!-- Título principal -->
                 <h1 class="login-title">Sistema Escolar</h1>
+                <!-- Subtítulo -->
                 <p class="login-subtitle">Criar nova conta</p>
             </div>
 
+            <!-- Div para mostrar mensagens de sucesso/erro -->
             <div id="message" class="message"></div>
 
+            <!-- Formulário de cadastro -->
             <form id="cadastroForm">
+                <!-- Campo: Nome Completo -->
                 <div class="form-group">
                     <label for="nome" class="form-label">Nome Completo</label>
+                    <!-- type="text" aceita qualquer texto, required torna obrigatório -->
                     <input type="text" id="nome" name="nome" class="form-input" placeholder="Digite seu nome completo" required>
                 </div>
 
+                <!-- Campo: Email -->
                 <div class="form-group">
                     <label for="email" class="form-label">E-mail</label>
+                    <!-- type="email" valida se é email válido -->
                     <input type="email" id="email" name="email" class="form-input" placeholder="Digite seu e-mail" required>
                 </div>
 
+                <!-- Campo: Senha -->
                 <div class="form-group">
                     <label for="senha" class="form-label">Senha</label>
+                    <!-- type="password" mascara os caracteres -->
                     <input type="password" id="senha" name="senha" class="form-input" placeholder="Digite sua senha" required>
                 </div>
 
+                <!-- Campo: Confirmar Senha -->
                 <div class="form-group">
                     <label for="confirmarSenha" class="form-label">Confirmar Senha</label>
+                    <!-- Deve ser igual ao campo senha -->
                     <input type="password" id="confirmarSenha" name="confirmarSenha" class="form-input" placeholder="Confirme sua senha" required>
                 </div>
 
+                <!-- Botão para submeter o formulário (criar conta) -->
+                <!-- type="submit" envia o formulário quando clicado -->
+                <!-- w-full = largura 100%, mb-20 = margem bottom -->
                 <button type="submit" class="btn btn-primary w-full mb-20" id="cadastroBtn">
                     Criar Conta
                 </button>
 
+                <!-- Link para fazer login se já tem conta -->
                 <div class="text-center">
                     <p class="text-secondary">Já tem uma conta?</p>
+                    <!-- Link que redireciona para página de login -->
                     <a href="/" class="btn btn-secondary w-full">
                         Fazer Login
                     </a>
@@ -51,12 +76,14 @@
         </div>
     </div>
 
+    <!-- Rodapé da página -->
     <footer class="footer">
         <div class="footer-frame">
             © Valdemar Sistemas - 2025
         </div>
     </footer>
 
+    <!-- Importa JavaScript que controla o cadastro -->
     <script src="../assets/js/cadastro.js"></script>
 </body>
 </html>

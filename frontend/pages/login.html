@@ -1,46 +1,72 @@
 <!DOCTYPE html>
+<!-- Declara que é um documento HTML5 -->
 <html lang="pt-BR">
 <head>
+    <!-- Codificação UTF-8 para suportar caracteres em português -->
     <meta charset="UTF-8">
+    <!-- Viewport: faz a página se adaptar para mobile (responsividade) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título que aparece na aba do navegador -->
     <title>Login - Sistema Escolar</title>
+    <!-- Importa o arquivo CSS com todo o estilo da página -->
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
+    <!-- Container principal da página de login -->
     <div class="login-container">
+        <!-- Card (cartão) que contém o formulário de login com animação fade-in -->
         <div class="login-card fade-in">
+            <!-- Cabeçalho com título e subtítulo -->
             <div class="login-header">
+                <!-- Título principal do sistema -->
                 <h1 class="login-title">Sistema Escolar</h1>
+                <!-- Subtítulo explicativo -->
                 <p class="login-subtitle">Faça login para acessar o sistema</p>
             </div>
 
+            <!-- Div para mostrar mensagens de erro ou sucesso (inicialmente vazia) -->
             <div id="message" class="message"></div>
 
+            <!-- Formulário de login que será processado pelo JavaScript -->
             <form id="loginForm">
+                <!-- Campo de email -->
                 <div class="form-group">
+                    <!-- Label associado ao input de email -->
                     <label for="email" class="form-label">E-mail</label>
+                    <!-- Input type="email" valida automaticamente se é um email válido -->
+                    <!-- required torna o campo obrigatório -->
+                    <!-- id="email" permite acessar este elemento via JavaScript -->
                     <input type="email" id="email" name="email" class="form-input" placeholder="Digite seu e-mail" required>
                 </div>
 
+                <!-- Campo de senha -->
                 <div class="form-group">
                     <label for="senha" class="form-label">Senha</label>
+                    <!-- Input type="password" mascara os caracteres digitados -->
+                    <!-- required torna obrigatório preencher -->
                     <input type="password" id="senha" name="senha" class="form-input" placeholder="Digite sua senha" required>
                 </div>
 
+                <!-- Botão de submit (enviar formulário) -->
                 <div class="text-center mb-20">
+                    <!-- type="submit" envia o formulário quando clicado -->
+                    <!-- id="loginBtn" permite acessar e controlar via JavaScript -->
                     <button type="submit" class="btn-login btn-primary" id="loginBtn">
                         Entrar
                     </button>
                 </div>
 
+                <!-- Link para página de cadastro -->
                 <div class="text-center">
                     <p class="text-secondary">Não tem uma conta?</p>
+                    <!-- Link que redireciona para a página de cadastro -->
                     <a href="/cadastro" class="btn btn-secondary">
                         Cadastrar novo usuário
                     </a>
                 </div>
             </form>
 
+            <!-- Seção com credenciais padrão para teste -->
             <div class="mt-20 text-center">
                 <small class="text-secondary">
                     <strong>Credenciais padrão:</strong><br>
@@ -51,12 +77,14 @@
         </div>
     </div>
 
+    <!-- Footer (rodapé) da página -->
     <footer class="footer">
         <div class="footer-frame">
             © Valdemar Sistemas - 2025
         </div>
     </footer>
 
+    <!-- Importa o arquivo JavaScript que controla a lógica do login -->
     <script src="../assets/js/login.js"></script>
 </body>
 </html>

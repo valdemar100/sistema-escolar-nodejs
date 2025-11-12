@@ -1,7 +1,31 @@
+/**
+ * ============================================
+ * CRUD DE PROFESSORES - JavaScript
+ * ============================================
+ * Gerencia criação, edição, exclusão e listagem de professores
+ * 
+ * ESTRUTURA:
+ * Este arquivo segue o mesmo padrão que usuarios.js
+ * 
+ * FUNÇÕES PRINCIPAIS:
+ * - verificarAuth(): Valida se está logado
+ * - carregarProfessores(): Busca todos os professores (GET /api/professores)
+ * - exibirProfessores(): Mostra professores na tabela
+ * - editarProfessor(id): Abre modal para editar
+ * - excluirProfessor(id): Remove professor do banco (DELETE /api/professores/:id)
+ * - salvarProfessor(): Cria ou atualiza professor (POST ou PUT)
+ * - buscarProfessores(): Filtra professores por nome/disciplina
+ * 
+ * DIFERENÇAS EM RELAÇÃO A USUÁRIOS:
+ * - Campos adicionais: disciplina, telefone
+ * - Tem busca/filtro por nome e disciplina em tempo real
+ * - Usa professorQueries no backend
+ */
+
 // Configuração da API
 const API_BASE = window.location.origin + '/api';
 
-// Elementos do DOM
+// Elementos do DOM (elementos HTML que serão manipulados)
 const modal = document.getElementById('modal');
 const modalTitle = document.getElementById('modalTitle');
 const professorForm = document.getElementById('professorForm');
@@ -13,12 +37,15 @@ const telefoneInput = document.getElementById('telefone');
 const salvarBtn = document.getElementById('salvarBtn');
 const tabelaProfessores = document.getElementById('tabelaProfessores');
 const messageDiv = document.getElementById('message');
-const searchInput = document.getElementById('searchInput');
+const searchInput = document.getElementById('searchInput'); // Campo de busca
 
 // Estado da aplicação
-let editandoProfessor = false;
+let editandoProfessor = false; // true = editar, false = criar
 
-// Verificar autenticação
+/**
+ * FUNÇÃO: Verificar autenticação
+ * Se não está logado, redireciona para login
+ */
 function verificarAuth() {
     const usuario = localStorage.getItem('usuario');
     if (!usuario) {
@@ -28,23 +55,32 @@ function verificarAuth() {
     return JSON.parse(usuario);
 }
 
-// Função de logout
+/**
+ * FUNÇÃO: Fazer logout
+ * Remove usuário do localStorage e volta para login
+ */
 function logout() {
     localStorage.removeItem('usuario');
     window.location.href = '/';
 }
 
-// Toggle menu mobile
+/**
+ * FUNÇÃO: Toggle menu mobile
+ * Abre/fecha menu de navegação em celular
+ */
 function toggleMenu() {
     const navMenu = document.getElementById('navMenu');
     navMenu.classList.toggle('show');
 }
 
-// Função para exibir mensagens
+/**
+ * FUNÇÃO: Exibir mensagens de sucesso/erro
+ */
 function showMessage(text, type = 'error') {
     messageDiv.textContent = text;
     messageDiv.className = `message ${type} show`;
     
+    // Esconder após 5 segundos
     setTimeout(() => {
         messageDiv.className = 'message';
     }, 5000);

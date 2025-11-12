@@ -1,7 +1,31 @@
+/**
+ * ============================================
+ * CRUD DE ALUNOS - JavaScript
+ * ============================================
+ * Gerencia criação, edição, exclusão e listagem de alunos
+ * 
+ * ESTRUTURA:
+ * Este arquivo segue o mesmo padrão que usuarios.js
+ * 
+ * FUNÇÕES PRINCIPAIS:
+ * - verificarAuth(): Valida se está logado
+ * - carregarAlunos(): Busca todos os alunos (GET /api/alunos)
+ * - exibirAlunos(): Mostra alunos na tabela
+ * - editarAluno(id): Abre modal para editar
+ * - excluirAluno(id): Remove aluno do banco (DELETE /api/alunos/:id)
+ * - salvarAluno(): Cria ou atualiza aluno (POST ou PUT)
+ * - buscarAlunos(): Filtra alunos por nome (busca em tempo real)
+ * 
+ * DIFERENÇAS EM RELAÇÃO A USUÁRIOS:
+ * - Campos adicionais: dataNascimento, serieTurma, telefone
+ * - Tem busca/filtro por nome em tempo real
+ * - Usa alunoQueries no backend (não usuarioQueries)
+ */
+
 // Configuração da API
 const API_BASE = window.location.origin + '/api';
 
-// Elementos do DOM
+// Elementos do DOM (elementos HTML que serão manipulados)
 const modal = document.getElementById('modal');
 const modalTitle = document.getElementById('modalTitle');
 const alunoForm = document.getElementById('alunoForm');
@@ -14,12 +38,15 @@ const telefoneInput = document.getElementById('telefone');
 const salvarBtn = document.getElementById('salvarBtn');
 const tabelaAlunos = document.getElementById('tabelaAlunos');
 const messageDiv = document.getElementById('message');
-const searchInput = document.getElementById('searchInput');
+const searchInput = document.getElementById('searchInput'); // Campo de busca
 
 // Estado da aplicação
-let editandoAluno = false;
+let editandoAluno = false; // true = editar, false = criar
 
-// Verificar autenticação
+/**
+ * FUNÇÃO: Verificar autenticação
+ * Se não está logado, redireciona para login
+ */
 function verificarAuth() {
     const usuario = localStorage.getItem('usuario');
     if (!usuario) {
@@ -29,23 +56,32 @@ function verificarAuth() {
     return JSON.parse(usuario);
 }
 
-// Função de logout
+/**
+ * FUNÇÃO: Fazer logout
+ * Remove usuário do localStorage e volta para login
+ */
 function logout() {
     localStorage.removeItem('usuario');
     window.location.href = '/';
 }
 
-// Toggle menu mobile
+/**
+ * FUNÇÃO: Toggle menu mobile
+ * Abre/fecha menu de navegação em celular
+ */
 function toggleMenu() {
     const navMenu = document.getElementById('navMenu');
     navMenu.classList.toggle('show');
 }
 
-// Função para exibir mensagens
+/**
+ * FUNÇÃO: Exibir mensagens de sucesso/erro
+ */
 function showMessage(text, type = 'error') {
     messageDiv.textContent = text;
     messageDiv.className = `message ${type} show`;
     
+    // Esconder após 5 segundos
     setTimeout(() => {
         messageDiv.className = 'message';
     }, 5000);

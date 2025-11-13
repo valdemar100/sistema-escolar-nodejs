@@ -117,13 +117,13 @@
 
                 <div class="form-row"> <!-- Div form-row (2 campos lado a lado) -->
                     <div class="form-group"> <!-- Primeiro campo -->
-                        <label for="email" class="form-label">E-mail</label> <!-- Label (campo opcional, sem *) -->
-                        <input type="email" id="email" name="email" class="form-input"> <!-- Input tipo email (valida formato email@domain.com) -->
+                        <label for="email" class="form-label">E-mail *</label> <!-- Label com asterisco (obrigatório) -->
+                        <input type="email" id="email" name="email" class="form-input" required> <!-- Input tipo email obrigatório (valida formato email@domain.com) -->
                     </div> <!-- Fecha form-group -->
 
                     <div class="form-group"> <!-- Segundo campo -->
-                        <label for="telefone" class="form-label">Telefone</label> <!-- Label -->
-                        <input type="tel" id="telefone" name="telefone" class="form-input" placeholder="(11) 99999-9999"> <!-- Input tipo tel (telefone) com placeholder mostrando formato -->
+                        <label for="telefone" class="form-label">Telefone *</label> <!-- Label com asterisco (obrigatório) -->
+                        <input type="tel" id="telefone" name="telefone" class="form-input" placeholder="(11) 99999-9999" required> <!-- Input tipo tel (telefone) obrigatório com required -->
                     </div> <!-- Fecha form-group -->
                 </div> <!-- Fecha form-row -->
 

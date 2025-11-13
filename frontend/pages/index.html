@@ -1,160 +1,161 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Sistema Escolar</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <header class="header">
-        <div class="header-content">
-            <h1>Sistema Escolar</h1>
-            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
-            <nav>
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="/dashboard" class="active">Início</a></li>
-                    <li><a href="/usuarios">Usuários</a></li>
-                    <li><a href="/alunos">Alunos</a></li>
-                    <li><a href="/professores">Professores</a></li>
-                    <li><a href="#" onclick="logout()" style="color: var(--error);">Sair</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+<!DOCTYPE html> <!-- Declara documento HTML5 -->
+<html lang="pt-BR"> <!-- Tag HTML com idioma português Brasil -->
+<head> <!-- Cabeçalho com metadados -->
+    <meta charset="UTF-8"> <!-- Codificação UTF-8 para caracteres especiais -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsividade mobile -->
+    <title>Dashboard - Sistema Escolar</title> <!-- Título da aba do navegador -->
+    <link rel="stylesheet" href="../assets/css/style.css"> <!-- Importa CSS personalizado -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Importa biblioteca Chart.js via CDN para criar gráficos -->
+</head> <!-- Fecha head -->
+<body> <!-- Início do corpo do documento (conteúdo visível) -->
+    <header class="header"> <!-- Tag header com classe header (CSS define estilo) -->
+        <div class="header-content"> <!-- Div para conteúdo interno do header -->
+            <h1>Sistema Escolar</h1> <!-- Título principal (h1 = heading 1, maior tamanho) -->
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button> <!-- Botão menu mobile (ícone hambúrguer) onclick chama toggleMenu() -->
+            <nav> <!-- Tag nav para navegação -->
+                <ul class="nav-menu" id="navMenu"> <!-- Lista não ordenada com classe nav-menu e id navMenu -->
+                    <li><a href="/dashboard" class="active">Início</a></li> <!-- Item de lista com link ativo (página atual) -->
+                    <li><a href="/usuarios">Usuários</a></li> <!-- Link para usuários -->
+                    <li><a href="/alunos">Alunos</a></li> <!-- Link para alunos -->
+                    <li><a href="/professores">Professores</a></li> <!-- Link para professores -->
+                    <li><a href="#" onclick="logout()" style="color: var(--error);">Sair</a></li> <!-- Link sair com cor vermelha (var(--error) = variável CSS) -->
+                </ul> <!-- Fecha lista -->
+            </nav> <!-- Fecha nav -->
+        </div> <!-- Fecha header-content -->
+    </header> <!-- Fecha header -->
 
-    <main class="main-content">
-        <div class="card fade-in">
-            <div class="card-header">
-                <h2 class="card-title">Bem-vindo ao Sistema Escolar</h2>
-            </div>
-            <p class="text-secondary">Gerencie alunos, professores e usuários de forma simples e eficiente.</p>
-            <div class="mt-10">
-                <span id="usuarioNome" class="text-primary" style="font-weight: 600; font-size: 1.1rem;"></span>
-            </div>
-        </div>
+    <main class="main-content"> <!-- Tag main com classe main-content (conteúdo principal) -->
+        <div class="card fade-in"> <!-- Div card com animação fade-in (CSS define entrada suave) -->
+            <div class="card-header"> <!-- Div cabeçalho do card -->
+                <h2 class="card-title">Bem-vindo ao Sistema Escolar</h2> <!-- Título h2 com classe card-title -->
+            </div> <!-- Fecha card-header -->
+            <p class="text-secondary">Gerencie alunos, professores e usuários de forma simples e eficiente.</p> <!-- Parágrafo com texto secundário (cor cinza) -->
+            <div class="mt-10"> <!-- Div com margem superior 10px (mt = margin-top) -->
+                <span id="usuarioNome" class="text-primary" style="font-weight: 600; font-size: 1.1rem;"></span> <!-- Span com id usuarioNome (JS coloca nome), cor primária, negrito 600, tamanho 1.1rem -->
+            </div> <!-- Fecha mt-10 -->
+        </div> <!-- Fecha card -->
 
-        <div class="dashboard-cards">
-            <div class="stat-card fade-in">
-                <div class="stat-number" id="totalAlunos">0</div>
-                <div class="stat-label">Total de Alunos</div>
-            </div>
+        <div class="dashboard-cards"> <!-- Div com classe dashboard-cards (CSS cria grid de cards) -->
+            <div class="stat-card fade-in"> <!-- Primeiro card de estatística com animação -->
+                <div class="stat-number" id="totalAlunos">0</div> <!-- Div com número grande, id totalAlunos (JS atualiza) -->
+                <div class="stat-label">Total de Alunos</div> <!-- Div com rótulo/descrição -->
+            </div> <!-- Fecha stat-card -->
             
-            <div class="stat-card success fade-in">
-                <div class="stat-number" id="totalProfessores">0</div>
-                <div class="stat-label">Total de Professores</div>
-            </div>
+            <div class="stat-card success fade-in"> <!-- Segundo card com classe success (cor verde) -->
+                <div class="stat-number" id="totalProfessores">0</div> <!-- Número de professores -->
+                <div class="stat-label">Total de Professores</div> <!-- Rótulo -->
+            </div> <!-- Fecha stat-card -->
             
-            <div class="stat-card warning fade-in">
-                <div class="stat-number" id="totalUsuarios">0</div>
-                <div class="stat-label">Total de Usuários</div>
-            </div>
-        </div>
+            <div class="stat-card warning fade-in"> <!-- Terceiro card com classe warning (cor laranja/amarela) -->
+                <div class="stat-number" id="totalUsuarios">0</div> <!-- Número de usuários -->
+                <div class="stat-label">Total de Usuários</div> <!-- Rótulo -->
+            </div> <!-- Fecha stat-card -->
+        </div> <!-- Fecha dashboard-cards -->
 
-        <div class="chart-container fade-in">
-            <h3 class="card-title mb-20">Visão Geral</h3>
-            <canvas id="graficoGeral" class="chart-canvas"></canvas>
-        </div>
+        <div class="chart-container fade-in"> <!-- Div container do gráfico com animação fade-in -->
+            <h3 class="card-title mb-20">Visão Geral</h3> <!-- Título h3 com margem inferior 20px (mb = margin-bottom) -->
+            <canvas id="graficoGeral" class="chart-canvas"></canvas> <!-- Canvas (elemento HTML5 para desenhar) com id graficoGeral e classe chart-canvas -->
+        </div> <!-- Fecha chart-container -->
 
-        <div class="card fade-in">
-            <div class="card-header">
-                <h3 class="card-title">Ações Rápidas</h3>
-            </div>
-            <div class="flex gap-10">
-                <a href="/usuarios" class="btn btn-primary">
-                    👤 Gerenciar Usuários
-                </a>
-                <a href="/alunos" class="btn btn-success">
-                    🎓 Gerenciar Alunos
-                </a>
-                <a href="/professores" class="btn btn-secondary">
-                    👨‍🏫 Gerenciar Professores
-                </a>
-            </div>
-        </div>
-    </main>
+        <div class="card fade-in"> <!-- Card de ações rápidas com animação -->
+            <div class="card-header"> <!-- Cabeçalho do card -->
+                <h3 class="card-title">Ações Rápidas</h3> <!-- Título -->
+            </div> <!-- Fecha card-header -->
+            <div class="flex gap-10"> <!-- Div flex (exibe filhos em linha) com gap 10px (espaçamento entre elementos) -->
+                <a href="/usuarios" class="btn btn-primary"> <!-- Link com estilo de botão primário -->
+                    👤 Gerenciar Usuários <!-- Emoji + texto -->
+                </a> <!-- Fecha link -->
+                <a href="/alunos" class="btn btn-success"> <!-- Link com estilo de botão success (verde) -->
+                    🎓 Gerenciar Alunos <!-- Emoji + texto -->
+                </a> <!-- Fecha link -->
+                <a href="/professores" class="btn btn-secondary"> <!-- Link com estilo de botão secundário (cinza) -->
+                    👨‍🏫 Gerenciar Professores <!-- Emoji + texto -->
+                </a> <!-- Fecha link -->
+            </div> <!-- Fecha flex -->
+        </div> <!-- Fecha card -->
+    </main> <!-- Fecha main-content -->
 
-    <footer class="footer">
-        <div class="footer-frame">
-            © Valdemar Sistemas - 2025
-        </div>
-    </footer>
+    <footer class="footer"> <!-- Tag footer com classe footer (rodapé) -->
+        <div class="footer-frame"> <!-- Div footer-frame (CSS define estilo) -->
+            © Valdemar Sistemas - 2025 <!-- Texto copyright com símbolo © -->
+        </div> <!-- Fecha footer-frame -->
+    </footer> <!-- Fecha footer -->
 
-    <script>
-        // Configuração da API
-        const API_BASE = window.location.origin + '/api';
+    <script> <!-- Início do JavaScript inline (dentro do HTML) -->
+        // Configuração da API: pega origem do site atual e adiciona /api
+        // Exemplo: http://localhost:3000/api ou https://seusite.com/api
+        const API_BASE = window.location.origin + '/api'; // Cria URL base da API dinamicamente
 
-        // Verificar autenticação
-        function verificarAuth() {
-            const usuario = localStorage.getItem('usuario');
-            if (!usuario) {
-                window.location.href = 'login.html';
-                return null;
-            }
-            return JSON.parse(usuario);
-        }
+        // FUNÇÃO: Verificar se usuário está logado
+        function verificarAuth() { // Define função verificarAuth
+            const usuario = localStorage.getItem('usuario'); // Busca dados do usuário no localStorage do navegador
+            if (!usuario) { // Se não encontrou (não está logado)
+                window.location.href = 'login.html'; // Redireciona para página de login
+                return null; // Retorna nulo
+            } // Fecha if
+            return JSON.parse(usuario); // Se está logado, converte JSON string em objeto e retorna
+        } // Fecha função
 
-        // Função de logout
-        function logout() {
-            localStorage.removeItem('usuario');
-            window.location.href = 'login.html';
-        }
+        // FUNÇÃO: Fazer logout do sistema
+        function logout() { // Define função logout
+            localStorage.removeItem('usuario'); // Remove dados do usuário do localStorage (desloga)
+            window.location.href = 'login.html'; // Redireciona para tela de login
+        } // Fecha função
 
-        // Toggle menu mobile
-        function toggleMenu() {
-            const navMenu = document.getElementById('navMenu');
-            navMenu.classList.toggle('show');
-        }
+        // FUNÇÃO: Abrir/fechar menu mobile (responsivo)
+        function toggleMenu() { // Define função toggleMenu
+            const navMenu = document.getElementById('navMenu'); // Pega elemento com id navMenu
+            navMenu.classList.toggle('show'); // Adiciona/remove classe 'show' (CSS mostra/esconde menu)
+        } // Fecha função
 
-        // Carregar estatísticas
-        async function carregarEstatisticas() {
-            try {
-                const response = await fetch(`${API_BASE}/dashboard`);
-                const data = await response.json();
+        // FUNÇÃO: Carregar estatísticas do dashboard (total alunos, professores, usuários)
+        async function carregarEstatisticas() { // Define função async (permite usar await)
+            try { // Bloco try para capturar erros
+                const response = await fetch(`${API_BASE}/dashboard`); // Faz requisição GET para /api/dashboard
+                const data = await response.json(); // Converte resposta em objeto JavaScript
 
-                if (data.success) {
-                    document.getElementById('totalAlunos').textContent = data.data.totalAlunos;
-                    document.getElementById('totalProfessores').textContent = data.data.totalProfessores;
-                    document.getElementById('totalUsuarios').textContent = data.data.totalUsuarios;
+                if (data.success) { // Se a API retornou sucesso
+                    document.getElementById('totalAlunos').textContent = data.data.totalAlunos; // Atualiza número de alunos na tela
+                    document.getElementById('totalProfessores').textContent = data.data.totalProfessores; // Atualiza número de professores
+                    document.getElementById('totalUsuarios').textContent = data.data.totalUsuarios; // Atualiza número de usuários
 
-                    // Criar gráfico
-                    criarGrafico(data.data);
-                } else {
-                    console.error('Erro ao carregar estatísticas:', data.message);
-                }
-            } catch (error) {
-                console.error('Erro de conexão:', error);
-            }
-        }
+                    // Criar gráfico com os dados recebidos
+                    criarGrafico(data.data); // Chama função que cria o gráfico passando os dados
+                } else { // Se API retornou erro (success = false)
+                    console.error('Erro ao carregar estatísticas:', data.message); // Exibe erro no console do navegador
+                } // Fecha else
+            } catch (error) { // Bloco catch captura erros de rede/conexão
+                console.error('Erro de conexão:', error); // Exibe erro no console
+            } // Fecha catch
+        } // Fecha função
 
-        // Criar gráfico com Chart.js
-        function criarGrafico(dados) {
-            const ctx = document.getElementById('graficoGeral').getContext('2d');
+        // FUNÇÃO: Criar gráfico de rosca (doughnut) usando Chart.js
+        function criarGrafico(dados) { // Define função que recebe os dados como parâmetro
+            const ctx = document.getElementById('graficoGeral').getContext('2d'); // Pega elemento canvas e seu contexto 2D para desenhar
             
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Alunos', 'Professores', 'Usuários'],
-                    datasets: [{
-                        data: [dados.totalAlunos, dados.totalProfessores, dados.totalUsuarios],
-                        backgroundColor: [
-                            '#3B82F6', // Azul (alunos)
-                            '#10B981', // Verde (professores)
-                            '#F59E0B'  // Laranja (usuários)
-                        ],
-                        borderColor: [
-                            '#2563EB',
-                            '#059669',
-                            '#D97706'
-                        ],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
+            new Chart(ctx, { // Cria nova instância do Chart.js no canvas
+                type: 'doughnut', // Tipo: gráfico de rosca (círculo com buraco no meio)
+                data: { // Objeto com os dados do gráfico
+                    labels: ['Alunos', 'Professores', 'Usuários'], // Array com rótulos das fatias
+                    datasets: [{ // Array de conjuntos de dados (só 1 neste caso)
+                        data: [dados.totalAlunos, dados.totalProfessores, dados.totalUsuarios], // Array com valores numéricos das fatias
+                        backgroundColor: [ // Array com cores de fundo de cada fatia
+                            '#3B82F6', // Azul para alunos (cor hexadecimal)
+                            '#10B981', // Verde para professores
+                            '#F59E0B'  // Laranja/amarelo para usuários
+                        ], // Fecha backgroundColor
+                        borderColor: [ // Array com cores de borda de cada fatia
+                            '#2563EB', // Azul escuro (borda dos alunos)
+                            '#059669', // Verde escuro (borda dos professores)
+                            '#D97706'  // Laranja escuro (borda dos usuários)
+                        ], // Fecha borderColor
+                        borderWidth: 2 // Largura da borda em pixels
+                    }] // Fecha datasets
+                }, // Fecha data
+                options: { // Objeto com configurações/opções do gráfico
+                    responsive: true, // Gráfico se adapta ao tamanho da tela (responsivo)
+                    maintainAspectRatio: false, // Não mantém proporção (permite altura customizada)
+                    plugins: { // Objeto com plugins (extensões) do Chart.js
                         title: {
                             display: true,
                             text: 'Distribuição por Categoria',
@@ -162,51 +163,51 @@
                                 size: 16,
                                 weight: 'bold'
                             }
-                        },
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+                        }, // Fecha title
+                        legend: { // Configurações da legenda (quadradinhos com cores e rótulos)
+                            position: 'bottom', // Posição da legenda: embaixo do gráfico
+                            labels: { // Configurações dos rótulos da legenda
+                                padding: 20, // Espaçamento de 20px ao redor
+                                usePointStyle: true, // Usar círculos em vez de quadrados
+                                font: { // Fonte dos rótulos
+                                    size: 12 // Tamanho 12 pixels
+                                } // Fecha font
+                            } // Fecha labels
+                        } // Fecha legend
+                    } // Fecha plugins
+                } // Fecha options
+            }); // Fecha new Chart
+        } // Fecha função criarGrafico
 
-        // Inicializar página
-        document.addEventListener('DOMContentLoaded', () => {
-            const usuario = verificarAuth();
-            if (usuario) {
-                document.getElementById('usuarioNome').textContent = `Olá, ${usuario.nome}!`;
-                carregarEstatisticas();
-            }
+        // INICIALIZAÇÃO: Executa quando a página termina de carregar
+        document.addEventListener('DOMContentLoaded', () => { // Escuta evento DOMContentLoaded (quando HTML está pronto)
+            const usuario = verificarAuth(); // Verifica se está logado e pega dados do usuário
+            if (usuario) { // Se usuário está logado
+                document.getElementById('usuarioNome').textContent = `Olá, ${usuario.nome}!`; // Mostra "Olá, [Nome]!" na tela
+                carregarEstatisticas(); // Carrega os números e cria gráfico
+            } // Fecha if
 
-            // Animações de entrada
-            const elements = document.querySelectorAll('.fade-in');
-            elements.forEach((el, index) => {
-                setTimeout(() => {
-                    el.style.animation = `fadeIn 0.5s ease-out forwards`;
-                }, index * 100);
-            });
-        });
+            // ANIMAÇÕES: Aplicar efeito fade-in nos elementos
+            const elements = document.querySelectorAll('.fade-in'); // Seleciona todos elementos com classe fade-in
+            elements.forEach((el, index) => { // Loop forEach: para cada elemento (el) e seu índice (index)
+                setTimeout(() => { // setTimeout: executa função após delay
+                    el.style.animation = `fadeIn 0.5s ease-out forwards`; // Define animação CSS: fadeIn por 0.5seg
+                }, index * 100); // Delay = índice * 100ms (cada elemento aparece 100ms depois do anterior)
+            }); // Fecha forEach
+        }); // Fecha addEventListener
 
-        // Fechar menu mobile ao clicar fora
-        document.addEventListener('click', (e) => {
-            const navMenu = document.getElementById('navMenu');
-            const menuBtn = document.querySelector('.mobile-menu-btn');
+        // FECHAR MENU MOBILE: Fecha menu ao clicar fora dele
+        document.addEventListener('click', (e) => { // Escuta cliques em qualquer lugar do documento
+            const navMenu = document.getElementById('navMenu'); // Pega elemento do menu
+            const menuBtn = document.querySelector('.mobile-menu-btn'); // Pega botão do menu (querySelector = 1º elemento que corresponde ao seletor CSS)
             
-            if (!navMenu.contains(e.target) && !menuBtn.contains(e.target)) {
-                navMenu.classList.remove('show');
-            }
-        });
+            if (!navMenu.contains(e.target) && !menuBtn.contains(e.target)) { // Se clique NÃO foi dentro do menu E NÃO foi no botão
+                navMenu.classList.remove('show'); // Remove classe 'show' (fecha menu)
+            } // Fecha if
+        }); // Fecha addEventListener
 
-        // Atualizar estatísticas a cada 30 segundos
-        setInterval(carregarEstatisticas, 30000);
-    </script>
-</body>
-</html>
+        // AUTO-REFRESH: Atualizar estatísticas automaticamente a cada 30 segundos
+        setInterval(carregarEstatisticas, 30000); // setInterval executa função repetidamente (30000ms = 30seg)
+    </script> <!-- Fecha script -->
+</body> <!-- Fecha body -->
+</html> <!-- Fecha HTML -->

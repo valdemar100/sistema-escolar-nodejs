@@ -23,156 +23,163 @@
  */
 
 // Configuração da API
-const API_BASE = window.location.origin + '/api';
+// window.location.origin pega http://localhost:3000 ou https://seusite.com
+// Adiciona /api no final para formar URL completa da API
+const API_BASE = window.location.origin + '/api'; // Constante com URL base da API
 
 // Elementos do DOM (elementos HTML que serão manipulados)
-const modal = document.getElementById('modal');
-const modalTitle = document.getElementById('modalTitle');
-const professorForm = document.getElementById('professorForm');
-const professorIdInput = document.getElementById('professorId');
-const nomeInput = document.getElementById('nome');
-const disciplinaInput = document.getElementById('disciplina');
-const emailInput = document.getElementById('email');
-const telefoneInput = document.getElementById('telefone');
-const salvarBtn = document.getElementById('salvarBtn');
-const tabelaProfessores = document.getElementById('tabelaProfessores');
-const messageDiv = document.getElementById('message');
-const searchInput = document.getElementById('searchInput'); // Campo de busca
+const modal = document.getElementById('modal'); // Pega elemento com id='modal' (caixa de diálogo pop-up)
+const modalTitle = document.getElementById('modalTitle'); // Pega elemento com id='modalTitle' (título do modal)
+const professorForm = document.getElementById('professorForm'); // Pega elemento com id='professorForm' (formulário)
+const professorIdInput = document.getElementById('professorId'); // Pega input hidden com id='professorId' (guarda ID ao editar)
+const nomeInput = document.getElementById('nome'); // Pega input com id='nome' (campo nome)
+const disciplinaInput = document.getElementById('disciplina'); // Pega select com id='disciplina' (dropdown disciplina)
+const emailInput = document.getElementById('email'); // Pega input com id='email' (campo email)
+const telefoneInput = document.getElementById('telefone'); // Pega input com id='telefone' (campo telefone)
+const salvarBtn = document.getElementById('salvarBtn'); // Pega botão com id='salvarBtn' (botão de salvar)
+const tabelaProfessores = document.getElementById('tabelaProfessores'); // Pega tbody com id='tabelaProfessores' (corpo da tabela)
+const messageDiv = document.getElementById('message'); // Pega div com id='message' (div para exibir mensagens)
+const searchInput = document.getElementById('searchInput'); // Pega input com id='searchInput' (campo de busca)
 
 // Estado da aplicação
-let editandoProfessor = false; // true = editar, false = criar
+let editandoProfessor = false; // Variável booleana: true = modo edição, false = modo criação
 
 /**
  * FUNÇÃO: Verificar autenticação
  * Se não está logado, redireciona para login
+/**
+ * FUNÇÃO: Verificar autenticação
+ * Se não está logado, redireciona para login
  */
-function verificarAuth() {
-    const usuario = localStorage.getItem('usuario');
-    if (!usuario) {
-        window.location.href = '/';
-        return null;
-    }
-    return JSON.parse(usuario);
-}
+function verificarAuth() { // Define função verificarAuth (sem parâmetros)
+    const usuario = localStorage.getItem('usuario'); // Busca item 'usuario' no localStorage do navegador
+    if (!usuario) { // Se usuario é null/undefined (não está logado)
+        window.location.href = '/'; // Redireciona para página inicial (login)
+        return null; // Retorna null e sai da função
+    } // Fecha if
+    return JSON.parse(usuario); // Converte string JSON em objeto JavaScript e retorna
+} // Fecha função
 
 /**
  * FUNÇÃO: Fazer logout
  * Remove usuário do localStorage e volta para login
  */
-function logout() {
-    localStorage.removeItem('usuario');
-    window.location.href = '/';
-}
+function logout() { // Define função logout (sem parâmetros)
+    localStorage.removeItem('usuario'); // Remove item 'usuario' do localStorage (desloga)
+    window.location.href = '/'; // Redireciona para página inicial (login)
+} // Fecha função
 
 /**
  * FUNÇÃO: Toggle menu mobile
  * Abre/fecha menu de navegação em celular
  */
-function toggleMenu() {
-    const navMenu = document.getElementById('navMenu');
-    navMenu.classList.toggle('show');
-}
+function toggleMenu() { // Define função toggleMenu (sem parâmetros)
+    const navMenu = document.getElementById('navMenu'); // Pega elemento com id='navMenu'
+    navMenu.classList.toggle('show'); // Alterna (adiciona/remove) classe 'show' no elemento
+} // Fecha função
 
 /**
  * FUNÇÃO: Exibir mensagens de sucesso/erro
  */
-function showMessage(text, type = 'error') {
-    messageDiv.textContent = text;
-    messageDiv.className = `message ${type} show`;
+function showMessage(text, type = 'error') { // Define função com 2 parâmetros (type tem valor padrão 'error')
+    messageDiv.textContent = text; // Define texto interno da div de mensagem
+    messageDiv.className = `message ${type} show`; // Define classes da div (template literal)
     
     // Esconder após 5 segundos
-    setTimeout(() => {
-        messageDiv.className = 'message';
-    }, 5000);
-}
+    setTimeout(() => { // setTimeout executa função arrow após 5000ms (5 segundos)
+        messageDiv.className = 'message'; // Remove classes 'error/success' e 'show' (esconde mensagem)
+    }, 5000); // Delay de 5000 milissegundos
+} // Fecha função
 
-// Abrir modal
-function abrirModal(professor = null) {
-    if (professor) {
+// FUNÇÃO: Abrir modal (criar ou editar)
+function abrirModal(professor = null) { // Define função com parâmetro professor (padrão null)
+    if (professor) { // Se professor existe (não é null) = MODO EDIÇÃO
         // Modo edição
-        editandoProfessor = true;
-        modalTitle.textContent = 'Editar Professor';
-        professorIdInput.value = professor.id;
-        nomeInput.value = professor.nome;
-        disciplinaInput.value = professor.disciplina;
-        emailInput.value = professor.email || '';
-        telefoneInput.value = professor.telefone || '';
-    } else {
+        editandoProfessor = true; // Define estado como edição
+        modalTitle.textContent = 'Editar Professor'; // Muda título do modal
+        professorIdInput.value = professor.id; // Armazena ID no input hidden para saber qual editar
+        nomeInput.value = professor.nome; // Preenche campo nome com dados atuais do professor
+        disciplinaInput.value = professor.disciplina; // Preenche disciplina (select)
+        emailInput.value = professor.email || ''; // Preenche email OU string vazia se for null (operador OR)
+        telefoneInput.value = professor.telefone || ''; // Preenche telefone OU string vazia se for null
+    } else { // Se professor é null = MODO CRIAÇÃO
         // Modo criação
-        editandoProfessor = false;
-        modalTitle.textContent = 'Adicionar Professor';
-        professorForm.reset();
-        professorIdInput.value = '';
-    }
+        editandoProfessor = false; // Define estado como criação
+        modalTitle.textContent = 'Adicionar Professor'; // Título para novo professor
+        professorForm.reset(); // Limpa todos os campos do formulário
+        professorIdInput.value = ''; // Sem ID = novo registro (não é edição)
+    } // Fecha else
     
-    modal.classList.add('show');
-    nomeInput.focus();
-}
+    modal.classList.add('show'); // Adiciona classe 'show' ao modal (CSS torna visível)
+    nomeInput.focus(); // Coloca cursor (foco) no primeiro campo (nome)
+} // Fecha função
 
-// Fechar modal
-function fecharModal() {
-    modal.classList.remove('show');
-    professorForm.reset();
-    editandoProfessor = false;
-}
+// FUNÇÃO: Fechar modal
+function fecharModal() { // Define função fecharModal (sem parâmetros)
+    modal.classList.remove('show'); // Remove classe 'show' (CSS esconde modal)
+    professorForm.reset(); // Limpa todos os campos do formulário
+    editandoProfessor = false; // Reseta estado para false (modo criação)
+} // Fecha função
 
-// Carregar lista de professores
-async function carregarProfessores() {
-    try {
-        const response = await fetch(`${API_BASE}/professores`);
-        const data = await response.json();
+// FUNÇÃO: Carregar lista de professores
+async function carregarProfessores() { // Define função async (permite usar await)
+    try { // Bloco try para capturar erros
+        const response = await fetch(`${API_BASE}/professores`); // Faz requisição GET para /api/professores
+        const data = await response.json(); // Converte resposta em objeto JavaScript (await espera conversão)
 
-        if (data.success) {
-            exibirProfessores(data.data);
-        } else {
-            showMessage('Erro ao carregar professores: ' + data.message);
-        }
-    } catch (error) {
-        console.error('Erro ao carregar professores:', error);
-        showMessage('Erro de conexão ao carregar professores');
-    }
-}
+        if (data.success) { // Se API retornou success: true
+            exibirProfessores(data.data); // Chama função passando array de professores
+        } else { // Se success: false
+            showMessage('Erro ao carregar professores: ' + data.message); // Mostra mensagem de erro
+        } // Fecha else
+    } catch (error) { // Bloco catch captura erros de rede/conexão
+        console.error('Erro ao carregar professores:', error); // Exibe erro no console do navegador
+        showMessage('Erro de conexão ao carregar professores'); // Mostra mensagem genérica ao usuário
+    } // Fecha catch
+} // Fecha função
 
-// Buscar professores
-async function buscarProfessores() {
-    const termo = searchInput.value.trim();
+// FUNÇÃO: Buscar professores (filtro por nome/disciplina)
+async function buscarProfessores() { // Define função async (sem parâmetros)
+    const termo = searchInput.value.trim(); // Pega valor do campo de busca e remove espaços
     
-    try {
-        const url = termo 
-            ? `${API_BASE}/professores?search=${encodeURIComponent(termo)}`
-            : `${API_BASE}/professores`;
+    try { // Bloco try
+        const url = termo  // Operador ternário: se termo existe
+            ? `${API_BASE}/professores?search=${encodeURIComponent(termo)}` // Então: adiciona parâmetro search na URL (encodeURIComponent codifica caracteres especiais)
+            : `${API_BASE}/professores`; // Senão: URL sem filtro (busca todos)
             
-        const response = await fetch(url);
-        const data = await response.json();
+        const response = await fetch(url); // Faz GET para URL determinada acima
+        const data = await response.json(); // Converte resposta em objeto
 
-        if (data.success) {
-            exibirProfessores(data.data);
-        } else {
-            showMessage('Erro ao buscar professores: ' + data.message);
+        if (data.success) { // Se sucesso (success é true)
+            exibirProfessores(data.data); // Chama função passando array data.data
+        } else { // Se falhou
+            showMessage('Erro ao buscar professores: ' + data.message); // Mostra erro com mensagem concatenada
         }
-    } catch (error) {
-        console.error('Erro ao buscar professores:', error);
-        showMessage('Erro de conexão ao buscar professores');
+    } catch (error) { // Captura erro de rede ou código
+        console.error('Erro ao buscar professores:', error); // Exibe erro no console
+        showMessage('Erro de conexão ao buscar professores'); // Mostra mensagem genérica
     }
 }
 
 // Limpar busca
-function limparBusca() {
-    searchInput.value = '';
-    carregarProfessores();
+function limparBusca() { // Função para limpar campo de busca
+    searchInput.value = ''; // Define valor do input como string vazia
+    carregarProfessores(); // Recarrega todos professores (sem filtro)
 }
 
 // Exibir professores na tabela
-function exibirProfessores(professores) {
-    if (professores.length === 0) {
-        tabelaProfessores.innerHTML = `
-            <tr>
-                <td colspan="7" class="text-center">Nenhum professor encontrado</td>
+function exibirProfessores(professores) { // Recebe array de professores como parâmetro
+    if (professores.length === 0) { // Se array está vazio
+        tabelaProfessores.innerHTML = ` // Define HTML interno da tabela
+            <tr> // Linha da tabela
+                <td colspan="7" class="text-center">Nenhum professor encontrado</td> // Célula ocupando 7 colunas, texto centralizado
             </tr>
-        `;
-        return;
+        `; // Template literal (string com múltiplas linhas)
+        return; // Sai da função aqui
     }
 
+    // map percorre array de professores, retorna novo array com HTML de cada linha
+    // join transforma array em string única sem separador
     tabelaProfessores.innerHTML = professores.map(professor => `
         <tr>
             <td>${professor.id}</td>
@@ -198,191 +205,191 @@ function exibirProfessores(professores) {
 }
 
 // Formatar data para exibição
-function formatarData(dataString) {
-    const data = new Date(dataString);
-    return data.toLocaleDateString('pt-BR') + ' ' + data.toLocaleTimeString('pt-BR', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
-    });
+function formatarData(dataString) { // Recebe string de data como parâmetro
+    const data = new Date(dataString); // Cria objeto Date a partir da string
+    return data.toLocaleDateString('pt-BR') + ' ' + data.toLocaleTimeString('pt-BR', { // Retorna data formatada pt-BR + espaço + hora
+        hour: '2-digit', // Hora com 2 dígitos
+        minute: '2-digit' // Minuto com 2 dígitos
+    }); // toLocaleTimeString formata hora em português
 }
 
 // Editar professor
-async function editarProfessor(id) {
-    try {
-        const response = await fetch(`${API_BASE}/professores/${id}`);
-        const data = await response.json();
+async function editarProfessor(id) { // Função assíncrona, recebe ID do professor
+    try { // Bloco de tentativa
+        const response = await fetch(`${API_BASE}/professores/${id}`); // Faz GET, aguarda resposta (await pausa execução)
+        const data = await response.json(); // Converte resposta JSON em objeto, aguarda conversão
 
-        if (data.success) {
-            abrirModal(data.data);
-        } else {
-            showMessage('Erro ao buscar professor: ' + data.message);
+        if (data.success) { // Se sucesso é true
+            abrirModal(data.data); // Chama função passando objeto professor
+        } else { // Se falhou
+            showMessage('Erro ao buscar professor: ' + data.message); // Mostra mensagem de erro concatenada
         }
-    } catch (error) {
-        console.error('Erro ao buscar professor:', error);
-        showMessage('Erro de conexão ao buscar professor');
+    } catch (error) { // Captura erros de rede ou código
+        console.error('Erro ao buscar professor:', error); // Exibe erro no console
+        showMessage('Erro de conexão ao buscar professor'); // Mostra mensagem genérica
     }
 }
 
 // Confirmar exclusão
-function confirmarExclusao(id, nome) {
-    if (confirm(`Tem certeza que deseja excluir o professor "${nome}"?`)) {
-        excluirProfessor(id);
-    }
+function confirmarExclusao(id, nome) { // Recebe ID e nome do professor
+    if (confirm(`Tem certeza que deseja excluir o professor "${nome}"?`)) { // Mostra diálogo de confirmação, retorna true/false
+        excluirProfessor(id); // Se confirmou, chama função passando ID
+    } // Se cancelou, não faz nada
 }
 
 // Excluir professor
-async function excluirProfessor(id) {
-    try {
-        const response = await fetch(`${API_BASE}/professores/${id}`, {
-            method: 'DELETE'
-        });
+async function excluirProfessor(id) { // Função assíncrona, recebe ID
+    try { // Bloco de tentativa
+        const response = await fetch(`${API_BASE}/professores/${id}`, { // Faz requisição DELETE, aguarda resposta
+            method: 'DELETE' // Método HTTP DELETE
+        }); // Segundo parâmetro de fetch é objeto de configuração
 
-        const data = await response.json();
+        const data = await response.json(); // Converte resposta em objeto, aguarda
 
-        if (data.success) {
-            showMessage('Professor excluído com sucesso!', 'success');
-            carregarProfessores();
-        } else {
-            showMessage('Erro ao excluir professor: ' + data.message);
+        if (data.success) { // Se exclusão funcionou
+            showMessage('Professor excluído com sucesso!', 'success'); // Mostra mensagem verde
+            carregarProfessores(); // Recarrega lista atualizada
+        } else { // Se falhou // Se falhou
+            showMessage('Erro ao excluir professor: ' + data.message); // Mostra mensagem de erro concatenada
         }
-    } catch (error) {
-        console.error('Erro ao excluir professor:', error);
-        showMessage('Erro de conexão ao excluir professor');
+    } catch (error) { // Captura erros
+        console.error('Erro ao excluir professor:', error); // Exibe erro no console
+        showMessage('Erro de conexão ao excluir professor'); // Mostra mensagem genérica
     }
 }
 
 // Salvar professor (criar ou atualizar)
-async function salvarProfessor(dadosProfessor) {
-    try {
-        salvarBtn.textContent = 'Salvando...';
-        salvarBtn.disabled = true;
+async function salvarProfessor(dadosProfessor) { // Função assíncrona, recebe objeto com dados
+    try { // Bloco de tentativa
+        salvarBtn.textContent = 'Salvando...'; // Muda texto do botão
+        salvarBtn.disabled = true; // Desabilita botão (disabled = true)
 
-        const url = editandoProfessor 
-            ? `${API_BASE}/professores/${professorIdInput.value}`
-            : `${API_BASE}/professores`;
+        const url = editandoProfessor // Define URL baseado na variável booleana
+            ? `${API_BASE}/professores/${professorIdInput.value}` // Se editando, usa PUT com ID
+            : `${API_BASE}/professores`; // Se criando, usa POST sem ID (operad or ternário)
         
-        const method = editandoProfessor ? 'PUT' : 'POST';
+        const method = editandoProfessor ? 'PUT' : 'POST'; // Define método: PUT se editando, POST se criando
 
-        const response = await fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dadosProfessor)
-        });
+        const response = await fetch(url, { // Faz requisição para URL, aguarda resposta
+            method: method, // Método HTTP (PUT ou POST)
+            headers: { // Cabeçalhos da requisição
+                'Content-Type': 'application/json' // Informa que corpo é JSON
+            }, // Objeto headers
+            body: JSON.stringify(dadosProfessor) // Converte objeto em string JSON
+        }); // Segundo parâmetro de fetch é objeto de configuração
 
-        const data = await response.json();
+        const data = await response.json(); // Converte resposta em objeto, aguarda
 
-        if (data.success) {
-            showMessage(data.message, 'success');
-            fecharModal();
-            carregarProfessores();
-        } else {
-            showMessage(data.message);
+        if (data.success) { // Se salvou com sucesso
+            showMessage(data.message, 'success'); // Mostra mensagem verde vinda do backend
+            fecharModal(); // Fecha modal
+            carregarProfessores(); // Recarrega lista atualizada
+        } else { // Se falhou
+            showMessage(data.message); // Mostra mensagem de erro (sem segundo parâmetro é erro)
         }
-    } catch (error) {
-        console.error('Erro ao salvar professor:', error);
-        showMessage('Erro de conexão ao salvar professor');
-    } finally {
-        salvarBtn.textContent = 'Salvar';
-        salvarBtn.disabled = false;
+    } catch (error) { // Captura erros de rede ou código
+        console.error('Erro ao salvar professor:', error); // Exibe erro no console
+        showMessage('Erro de conexão ao salvar professor'); // Mostra mensagem genérica
+    } finally { // Bloco que sempre executa (sucesso ou erro)
+        salvarBtn.textContent = 'Salvar'; // Restaura texto original do botão
+        salvarBtn.disabled = false; // Reabilita botão
     }
 }
 
 // Formatação de telefone
-function formatarTelefone(valor) {
+function formatarTelefone(valor) { // Recebe valor do input
     // Remove tudo que não é número
-    valor = valor.replace(/\D/g, '');
+    valor = valor.replace(/\D/g, ''); // \D pega qualquer caractere não dígito, /g é global (todos), substitui por vazio
     
     // Aplica a máscara
-    if (valor.length >= 11) {
-        return valor.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-    } else if (valor.length >= 10) {
-        return valor.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-    } else if (valor.length >= 6) {
-        return valor.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-    } else if (valor.length >= 2) {
-        return valor.replace(/(\d{2})(\d{0,5})/, '($1) $2');
-    } else {
-        return valor;
+    if (valor.length >= 11) { // Se tem 11+ dígitos (celular com DDD)
+        return valor.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3'); // Regex captura 3 grupos: (DD) NNNNN-NNNN
+    } else if (valor.length >= 10) { // Se tem 10 dígitos (fixo com DDD)
+        return valor.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3'); // (DD) NNNN-NNNN
+    } else if (valor.length >= 6) { // Se tem 6-9 dígitos
+        return valor.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3'); // {0,4} = 0 a 4 dígitos
+    } else if (valor.length >= 2) { // Se tem 2-5 dígitos
+        return valor.replace(/(\d{2})(\d{0,5})/, '($1) $2'); // {0,5} = 0 a 5 dígitos
+    } else { // Se tem menos de 2 dígitos
+        return valor; // Retorna sem formatação
     }
 }
 
 // Event listener para formatação do telefone
-telefoneInput.addEventListener('input', (e) => {
-    e.target.value = formatarTelefone(e.target.value);
-});
+telefoneInput.addEventListener('input', (e) => { // Escuta evento input (qualquer mudança no campo)
+    e.target.value = formatarTelefone(e.target.value); // e.target é o elemento, value é o valor digitado
+}); // Arrow function recebe evento como parâmetro
 
 // Event listener para busca em tempo real
-searchInput.addEventListener('keyup', (e) => {
-    if (e.key === 'Enter') {
-        buscarProfessores();
-    }
-});
+searchInput.addEventListener('keyup', (e) => { // Escuta evento keyup (quando solta tecla)
+    if (e.key === 'Enter') { // Se tecla pressionada foi Enter
+        buscarProfessores(); // Executa busca
+    } // Senão não faz nada
+}); // e.key contém nome da tecla
 
 // Event listener para o formulário
-professorForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+professorForm.addEventListener('submit', (e) => { // Escuta evento submit (envio do formulário)
+    e.preventDefault(); // Previne comportamento padrão (recarregar página)
     
-    const nome = nomeInput.value.trim();
-    const disciplina = disciplinaInput.value;
-    const email = emailInput.value.trim();
-    const telefone = telefoneInput.value.trim();
+    const nome = nomeInput.value.trim(); // Pega valor do input e remove espaços das pontas
+    const disciplina = disciplinaInput.value; // Pega valor selecionado no select
+    const email = emailInput.value.trim(); // Pega email e remove espaços
+    const telefone = telefoneInput.value.trim(); // Pega telefone e remove espaços
 
     // Validações
-    if (!nome || !disciplina) {
-        showMessage('Nome e disciplina são obrigatórios');
-        return;
+    if (!nome || !disciplina) { // Se nome vazio OU disciplina vazia (! é NOT, || é OR)
+        showMessage('Nome e disciplina são obrigatórios'); // Mostra mensagem de erro
+        return; // Sai da função sem salvar
     }
 
-    if (email && !isValidEmail(email)) {
-        showMessage('Por favor, digite um e-mail válido');
-        return;
+    if (email && !isValidEmail(email)) { // Se email preenchido E não é válido (&& é AND)
+        showMessage('Por favor, digite um e-mail válido'); // Mostra erro
+        return; // Sai da função
     }
 
     // Preparar dados
-    const dadosProfessor = {
-        nome,
-        disciplina,
-        email,
-        telefone
-    };
+    const dadosProfessor = { // Cria objeto literal
+        nome, // Shorthand: mesmo que nome: nome
+        disciplina, // Shorthand
+        email, // Shorthand
+        telefone // Shorthand
+    }; // Objeto com 4 propriedades
 
-    salvarProfessor(dadosProfessor);
-});
+    salvarProfessor(dadosProfessor); // Chama função passando objeto
+}); // Arrow function recebe evento
 
 // Validar e-mail
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+function isValidEmail(email) { // Recebe string de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex: início(^), sem espaço/@ (+), @, sem espaço/@ (+), ponto, sem espaço/@ (+), fim($)
+    return emailRegex.test(email); // test() retorna true se email corresponde ao padrão
 }
 
 // Fechar modal ao clicar fora
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-        fecharModal();
-    }
-});
+modal.addEventListener('click', (e) => { // Escuta clique no modal
+    if (e.target === modal) { // Se clicou exatamente no fundo (não no conteúdo interno)
+        fecharModal(); // Fecha modal
+    } // === compara valor E tipo
+}); // e.target é o elemento clicado
 
 // Fechar modal com ESC
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('show')) {
-        fecharModal();
-    }
-});
+document.addEventListener('keydown', (e) => { // Escuta tecla pressionada no documento todo
+    if (e.key === 'Escape' && modal.classList.contains('show')) { // Se ESC E modal está visível
+        fecharModal(); // Fecha modal
+    } // && é AND, ambas condições devem ser true
+}); // contains verifica se classe existe
 
 // Fechar menu mobile ao clicar fora
-document.addEventListener('click', (e) => {
-    const navMenu = document.getElementById('navMenu');
-    const menuBtn = document.querySelector('.mobile-menu-btn');
+document.addEventListener('click', (e) => { // Escuta clique no documento
+    const navMenu = document.getElementById('navMenu'); // Pega elemento do menu
+    const menuBtn = document.querySelector('.mobile-menu-btn'); // Pega botão do menu
     
-    if (!navMenu.contains(e.target) && !menuBtn.contains(e.target)) {
-        navMenu.classList.remove('show');
-    }
-});
+    if (!navMenu.contains(e.target) && !menuBtn.contains(e.target)) { // Se clique fora do menu E fora do botão
+        navMenu.classList.remove('show'); // Remove classe show (fecha menu)
+    } // contains verifica se elemento contém outro
+}); // ! é NOT
 
 // Inicializar página
-document.addEventListener('DOMContentLoaded', () => {
-    verificarAuth();
-    carregarProfessores();
-});
+document.addEventListener('DOMContentLoaded', () => { // Escuta quando DOM estiver completamente carregado
+    verificarAuth(); // Verifica se usuário está logado
+    carregarProfessores(); // Carrega lista de professores
+}); // Arrow function sem parâmetros

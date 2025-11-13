@@ -1,698 +1,698 @@
 /* === RESET E CONFIGURAÇÕES BÁSICAS === */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* { /* Seletor universal: aplica a todos elementos */
+    margin: 0; /* Remove margem padrão de todos elementos */
+    padding: 0; /* Remove padding padrão de todos elementos */
+    box-sizing: border-box; /* Border e padding não aumentam largura total */
 }
 
-:root {
+:root { /* Pseudo-classe para definir variáveis CSS globais */
     /* Paleta de cores */
-    --primary: #3B82F6;
-    --primary-dark: #2563EB;
-    --background: #F9FAFB;
-    --text-primary: #111827;
-    --text-secondary: #6B7280;
-    --success: #10B981;
-    --error: #EF4444;
-    --warning: #F59E0B;
-    --white: #ffffff;
-    --border: #e5e7eb;
-    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
+    --primary: #3B82F6; /* Azul principal usado em botões e destaques */
+    --primary-dark: #2563EB; /* Azul mais escuro para hover */
+    --background: #F9FAFB; /* Cinza claro para fundo da página */
+    --text-primary: #111827; /* Preto/cinza escuro para texto principal */
+    --text-secondary: #6B7280; /* Cinza médio para texto secundário */
+    --success: #10B981; /* Verde para mensagens de sucesso */
+    --error: #EF4444; /* Vermelho para mensagens de erro */
+    --warning: #F59E0B; /* Laranja para avisos */
+    --white: #ffffff; /* Branco para cards e fundos */
+    --border: #e5e7eb; /* Cinza claro para bordas */
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* Sombra suave: offset-x offset-y blur spread color */
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Sombra maior para hover */
+} /* var(--nome) usa essas variáveis no CSS */
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--background);
-    color: var(--text-primary);
-    line-height: 1.6;
+body { /* Estilos globais do corpo da página */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fontes em ordem de prioridade, sans-serif é fallback */
+    background-color: var(--background); /* Usa variável --background */
+    color: var(--text-primary); /* Cor do texto usando variável */
+    line-height: 1.6; /* Altura da linha 1.6x o tamanho da fonte (espaçamento vertical) */
 }
 
 /* === CABEÇALHO FIXO === */
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: var(--white);
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    z-index: 1000;
-    height: 64px;
+.header { /* Classe do cabeçalho */
+    position: fixed; /* Fixa o header no topo ao rolar página */
+    top: 0; /* Distancia 0 do topo */
+    left: 0; /* Distancia 0 da esquerda */
+    right: 0; /* Distancia 0 da direita (ocupa largura total) */
+    background-color: var(--white); /* Fundo branco */
+    border-bottom: 1px solid var(--border); /* Borda inferior de 1px sólida */
+    box-shadow: var(--shadow); /* Sombra suave */
+    z-index: 1000; /* Empilhamento: fica na frente de outros elementos */
+    height: 64px; /* Altura fixa de 64 pixels */
 }
 
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    height: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+.header-content { /* Container interno do header */
+    display: flex; /* Flexbox: elementos ficam em linha */
+    align-items: center; /* Alinha verticalmente ao centro */
+    justify-content: space-between; /* Espaço entre logo e menu */
+    padding: 0 20px; /* Padding lateral de 20px, vertical 0 */
+    height: 100%; /* Ocupa 100% da altura do pai (64px) */
+    max-width: 1200px; /* Largura máxima de 1200px */
+    margin: 0 auto; /* Margem vertical 0, horizontal auto (centraliza) */
 }
 
-.header h1 {
-    color: var(--primary);
-    font-size: 1.5rem;
-    font-weight: 700;
+.header h1 { /* Título dentro do header */
+    color: var(--primary); /* Cor azul */
+    font-size: 1.5rem; /* Tamanho 1.5x o tamanho base (24px se base é 16px) */
+    font-weight: 700; /* Peso da fonte: negrito (100-900, 400 é normal) */
 }
 
-.nav-menu {
-    display: flex;
-    list-style: none;
-    gap: 30px;
+.nav-menu { /* Lista de links do menu */
+    display: flex; /* Flexbox: itens em linha */
+    list-style: none; /* Remove bolinhas da lista */
+    gap: 30px; /* Espaçamento de 30px entre itens */
 }
 
-.nav-menu a {
-    text-decoration: none;
-    color: var(--text-secondary);
-    font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+.nav-menu a { /* Links dentro do menu */
+    text-decoration: none; /* Remove sublinhado */
+    color: var(--text-secondary); /* Cinza médio */
+    font-weight: 500; /* Peso médio (entre normal e negrito) */
+    padding: 8px 16px; /* Padding vertical 8px, horizontal 16px */
+    border-radius: 8px; /* Bordas arredondadas de 8px */
+    transition: all 0.3s ease; /* Transição suave de 0.3s em todas propriedades, ease é curva de aceleração */
 }
 
-.nav-menu a:hover, .nav-menu a.active {
-    color: var(--primary);
-    background-color: rgba(59, 130, 246, 0.1);
+.nav-menu a:hover, .nav-menu a.active { /* Hover (mouse em cima) OU classe active */
+    color: var(--primary); /* Muda cor para azul */
+    background-color: rgba(59, 130, 246, 0.1); /* Fundo azul com 10% de opacidade (rgba: red green blue alpha) */
 }
 
 /* === MENU MOBILE === */
-.mobile-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--text-primary);
-    cursor: pointer;
+.mobile-menu-btn { /* Botão hambúrguer para mobile */
+    display: none; /* Escondido por padrão (só aparece em media query) */
+    background: none; /* Sem fundo */
+    border: none; /* Sem borda */
+    font-size: 1.5rem; /* Tamanho do ícone */
+    color: var(--text-primary); /* Cor preta/cinza */
+    cursor: pointer; /* Cursor vira mãozinha ao passar */
 }
 
 /* === CONTEÚDO PRINCIPAL === */
-.main-content {
-    margin-top: 64px;
-    padding: 30px 20px;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
+.main-content { /* Container do conteúdo principal */
+    margin-top: 64px; /* Margem topo 64px (altura do header fixo) */
+    padding: 30px 20px; /* Padding vertical 30px, horizontal 20px */
+    max-width: 1200px; /* Largura máxima */
+    margin-left: auto; /* Margem esquerda automática */
+    margin-right: auto; /* Margem direita automática (junto com left:auto centraliza) */
 }
 
 /* === CARDS === */
-.card {
-    background-color: var(--white);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
+.card { /* Card genérico */
+    background-color: var(--white); /* Fundo branco */
+    border-radius: 12px; /* Bordas arredondadas 12px */
+    padding: 24px; /* Padding interno de 24px em todos lados */
+    box-shadow: var(--shadow); /* Sombra suave */
+    border: 1px solid var(--border); /* Borda cinza clara de 1px */
+    margin-bottom: 20px; /* Margem inferior 20px */
+    transition: all 0.3s ease; /* Transição suave de 0.3 segundos */
 }
 
-.card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
+.card:hover { /* Card quando mouse passa por cima */
+    box-shadow: var(--shadow-lg); /* Sombra maior */
+    transform: translateY(-2px); /* Move 2px para cima (eixo Y negativo) */
 }
 
-.card-header {
-    display: flex;
-    justify-content: between;
-    align-items: center;
-    margin-bottom: 20px;
+.card-header { /* Cabeçalho do card */
+    display: flex; /* Flexbox */
+    justify-content: space-between; /* Espaço entre título e botão (corrigido de 'between') */
+    align-items: center; /* Alinha verticalmente ao centro */
+    margin-bottom: 20px; /* Margem inferior 20px */
 }
 
-.card-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text-primary);
+.card-title { /* Título do card */
+    font-size: 1.25rem; /* Tamanho 1.25x o base (20px se base é 16px) */
+    font-weight: 600; /* Peso semi-negrito */
+    color: var(--text-primary); /* Cor do texto principal */
 }
 
 /* === DASHBOARD CARDS === */
-.dashboard-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+.dashboard-cards { /* Container dos cards do dashboard */
+    display: grid; /* Grid layout */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Colunas automáticas: mínimo 250px, máximo 1 fração, auto-fit cria quantas couberem */
+    gap: 20px; /* Espaçamento de 20px entre cards */
+    margin-bottom: 30px; /* Margem inferior 30px */
 }
 
-.stat-card {
-    background-color: var(--white);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: var(--shadow);
-    text-align: center;
-    border-left: 4px solid var(--primary);
-    transition: all 0.3s ease;
+.stat-card { /* Card de estatística */
+    background-color: var(--white); /* Fundo branco */
+    border-radius: 12px; /* Bordas arredondadas */
+    padding: 24px; /* Padding interno */
+    box-shadow: var(--shadow); /* Sombra */
+    text-align: center; /* Texto centralizado */
+    border-left: 4px solid var(--primary); /* Borda esquerda grossa azul */
+    transition: all 0.3s ease; /* Transição suave */
 }
 
-.stat-card.success {
-    border-left-color: var(--success);
+.stat-card.success { /* Stat card com classe success */
+    border-left-color: var(--success); /* Borda esquerda verde */
 }
 
-.stat-card.warning {
-    border-left-color: var(--warning);
+.stat-card.warning { /* Stat card com classe warning */
+    border-left-color: var(--warning); /* Borda esquerda laranja */
 }
 
-.stat-card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
+.stat-card:hover { /* Stat card no hover */
+    box-shadow: var(--shadow-lg); /* Sombra maior */
+    transform: translateY(-2px); /* Move para cima */
 }
 
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 8px;
+.stat-number { /* Número da estatística */
+    font-size: 2.5rem; /* Tamanho grande (40px se base 16px) */
+    font-weight: 700; /* Negrito */
+    color: var(--primary); /* Cor azul */
+    margin-bottom: 8px; /* Margem inferior */
 }
 
-.stat-card.success .stat-number {
-    color: var(--success);
+.stat-card.success .stat-number { /* Número dentro de stat-card.success */
+    color: var(--success); /* Cor verde */
 }
 
-.stat-card.warning .stat-number {
-    color: var(--warning);
+.stat-card.warning .stat-number { /* Número dentro de stat-card.warning */
+    color: var(--warning); /* Cor laranja */
 }
 
-.stat-label {
-    color: var(--text-secondary);
-    font-weight: 500;
+.stat-label { /* Label da estatística */
+    color: var(--text-secondary); /* Cor cinza */
+    font-weight: 500; /* Peso médio */
 }
 
 /* === BOTÕES === */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 14px;
-    gap: 8px;
+.btn { /* Classe base para todos botões */
+    display: inline-flex; /* Inline-flex: fica na linha mas usa flexbox internamente */
+    align-items: center; /* Alinha ítens verticalmente ao centro */
+    justify-content: center; /* Centraliza conteúdo horizontalmente */
+    padding: 10px 20px; /* Padding vertical 10px, horizontal 20px */
+    border: none; /* Remove borda padrão */
+    border-radius: 8px; /* Bordas arredondadas */
+    font-weight: 500; /* Peso médio */
+    text-decoration: none; /* Remove sublinhado (para <a> estilizado como botão) */
+    cursor: pointer; /* Cursor vira mãozinha */
+    transition: all 0.3s ease; /* Transição suave em todas propriedades */
+    font-size: 14px; /* Tamanho da fonte */
+    gap: 8px; /* Espaço de 8px entre ítens internos (ex: ícone + texto) */
 }
 
 /* Botão de login menor e centralizado */
-.btn-login {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 32px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 16px;
-    width: auto;
-    margin: 0 auto;
+.btn-login { /* Classe específica para botão de login */
+    display: inline-flex; /* Inline-flex */
+    align-items: center; /* Alinha verticalmente */
+    justify-content: center; /* Centraliza */
+    padding: 12px 32px; /* Padding maior que .btn padrão */
+    border: none; /* Sem borda */
+    border-radius: 8px; /* Bordas arredondadas */
+    font-weight: 500; /* Peso médio */
+    text-decoration: none; /* Sem sublinhado */
+    cursor: pointer; /* Mãozinha */
+    transition: all 0.3s ease; /* Transição */
+    font-size: 16px; /* Fonte maior (16px vs 14px do .btn) */
+    width: auto; /* Largura automática (ajusta ao conteúdo) */
+    margin: 0 auto; /* Margem vertical 0, horizontal auto (centraliza) */
 }
 
-.btn-primary {
-    background-color: var(--primary);
-    color: var(--white);
+.btn-primary { /* Botão primário azul */
+    background-color: var(--primary); /* Fundo azul */
+    color: var(--white); /* Texto branco */
 }
 
-.btn-primary:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-lg);
+.btn-primary:hover { /* Hover do botão primário */
+    background-color: var(--primary-dark); /* Azul mais escuro */
+    transform: translateY(-1px); /* Move 1px para cima */
+    box-shadow: var(--shadow-lg); /* Sombra maior */
 }
 
 /* Estilo específico para botão de login */
-.btn-login.btn-primary {
-    background-color: var(--primary);
-    color: var(--white);
-    min-width: 140px;
+.btn-login.btn-primary { /* Quando tem ambas classes */
+    background-color: var(--primary); /* Fundo azul */
+    color: var(--white); /* Texto branco */
+    min-width: 140px; /* Largura mínima de 140px */
 }
 
-.btn-login.btn-primary:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+.btn-login.btn-primary:hover { /* Hover do botão de login primário */
+    background-color: var(--primary-dark); /* Azul escuro */
+    transform: translateY(-2px); /* Move 2px para cima (mais que .btn-primary) */
+    box-shadow: var(--shadow-lg); /* Sombra grande */
 }
 
 /* Estilo específico para botões de ação pequenos (cabeçalhos) */
-.btn-sm {
-    padding: 8px 16px;
-    font-size: 0.875rem;
-    min-width: auto;
-    width: auto;
-    margin-left: 20px;
+.btn-sm { /* Botão pequeno genérico */
+    padding: 8px 16px; /* Padding menor */
+    font-size: 0.875rem; /* 0.875 × 16px = 14px */
+    min-width: auto; /* Largura mínima automática */
+    width: auto; /* Largura automática */
+    margin-left: 20px; /* Margem esquerda 20px */
 }
 
-.btn-sm.btn-primary {
-    background-color: var(--primary);
-    color: var(--white);
-    padding: 8px 16px;
-    font-size: 0.875rem;
+.btn-sm.btn-primary { /* Botão pequeno azul */
+    background-color: var(--primary); /* Fundo azul */
+    color: var(--white); /* Texto branco */
+    padding: 8px 16px; /* Padding reforçado (pode sobrescrever .btn-primary) */
+    font-size: 0.875rem; /* Fonte 14px */
 }
 
-.btn-sm.btn-primary:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-lg);
+.btn-sm.btn-primary:hover { /* Hover do botão pequeno primário */
+    background-color: var(--primary-dark); /* Azul escuro */
+    transform: translateY(-1px); /* Move para cima */
+    box-shadow: var(--shadow-lg); /* Sombra grande */
 }
 
-.btn-success {
-    background-color: var(--success);
-    color: var(--white);
+.btn-success { /* Botão verde de sucesso */
+    background-color: var(--success); /* Fundo verde */
+    color: var(--white); /* Texto branco */
 }
 
-.btn-success:hover {
-    background-color: #059669;
+.btn-success:hover { /* Hover do botão success */
+    background-color: #059669; /* Verde mais escuro (hex literal) */
 }
 
-.btn-error {
-    background-color: var(--error);
-    color: var(--white);
+.btn-error { /* Botão vermelho de erro/excluir */
+    background-color: var(--error); /* Fundo vermelho */
+    color: var(--white); /* Texto branco */
 }
 
-.btn-error:hover {
-    background-color: #dc2626;
+.btn-error:hover { /* Hover do botão error */
+    background-color: #dc2626; /* Vermelho mais escuro */
 }
 
-.btn-secondary {
-    background-color: var(--background);
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
+.btn-secondary { /* Botão secundário (cancelar) */
+    background-color: var(--background); /* Fundo cinza claro */
+    color: var(--text-secondary); /* Texto cinza médio */
+    border: 1px solid var(--border); /* Borda cinza */
 }
 
-.btn-secondary:hover {
-    background-color: var(--white);
-    border-color: var(--primary);
-    color: var(--primary);
+.btn-secondary:hover { /* Hover do botão secundário */
+    background-color: var(--white); /* Fundo branco */
+    border-color: var(--primary); /* Borda azul */
+    color: var(--primary); /* Texto azul */
 }
 
-.btn-small {
-    padding: 6px 12px;
-    font-size: 12px;
+.btn-small { /* Botão pequeno (tabelas) */
+    padding: 6px 12px; /* Padding menor que .btn */
+    font-size: 12px; /* Fonte 12px */
 }
 
 /* === FORMULÁRIOS === */
-.form-group {
-    margin-bottom: 20px;
+.form-group { /* Grupo de label + input */
+    margin-bottom: 20px; /* Espaço de 20px abaixo de cada grupo */
 }
 
-.form-label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 500;
-    color: var(--text-primary);
+.form-label { /* Label do input */
+    display: block; /* Ocupa linha inteira (block) */
+    margin-bottom: 6px; /* Espaço de 6px entre label e input */
+    font-weight: 500; /* Peso médio */
+    color: var(--text-primary); /* Cor preta/cinza escuro */
 }
 
-.form-input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    background-color: var(--white);
+.form-input { /* Input de formulário */
+    width: 100%; /* Largura 100% do pai */
+    padding: 12px 16px; /* Padding vertical 12px, horizontal 16px */
+    border: 1px solid var(--border); /* Borda cinza */
+    border-radius: 8px; /* Bordas arredondadas */
+    font-size: 14px; /* Tamanho da fonte */
+    transition: all 0.3s ease; /* Transição suave */
+    background-color: var(--white); /* Fundo branco */
 }
 
-.form-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+.form-input:focus { /* Input quando clicado/focado */
+    outline: none; /* Remove outline padrão do navegador */
+    border-color: var(--primary); /* Borda azul */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* Sombra azul difusa: offset-x offset-y blur spread color */
 }
 
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+.form-row { /* Linha com 2 inputs lado a lado */
+    display: grid; /* Grid layout */
+    grid-template-columns: 1fr 1fr; /* 2 colunas iguais (1 fração cada) */
+    gap: 20px; /* Espaço de 20px entre colunas */
 }
 
 /* === TABELAS === */
-.table-container {
-    overflow-x: auto;
-    border-radius: 8px;
-    border: 1px solid var(--border);
+.table-container { /* Container responsivo da tabela */
+    overflow-x: auto; /* Scroll horizontal se tabela for maior que container */
+    border-radius: 8px; /* Bordas arredondadas */
+    border: 1px solid var(--border); /* Borda cinza */
 }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: var(--white);
+.table { /* Tabela HTML */
+    width: 100%; /* Largura 100% */
+    border-collapse: collapse; /* Colapsa bordas duplas em uma só */
+    background-color: var(--white); /* Fundo branco */
 }
 
-.table th,
-.table td {
-    padding: 12px 16px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
+.table th, /* Cabeçalho da tabela */
+.table td { /* Células da tabela */
+    padding: 12px 16px; /* Padding vertical 12px, horizontal 16px */
+    text-align: left; /* Alinhamento de texto à esquerda */
+    border-bottom: 1px solid var(--border); /* Borda inferior cinza */
 }
 
-.table th {
-    background-color: var(--background);
-    font-weight: 600;
-    color: var(--text-primary);
+.table th { /* Apenas cabeçalho */
+    background-color: var(--background); /* Fundo cinza claro */
+    font-weight: 600; /* Peso semi-negrito */
+    color: var(--text-primary); /* Cor preta/cinza escuro */
 }
 
-.table tr:hover {
-    background-color: rgba(59, 130, 246, 0.05);
+.table tr:hover { /* Linha da tabela no hover */
+    background-color: rgba(59, 130, 246, 0.05); /* Fundo azul muito claro (5% opacidade) */
 }
 
 /* === MENSAGENS === */
-.message {
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-weight: 500;
-    display: none;
+.message { /* Caixa de mensagem */
+    padding: 12px 16px; /* Padding vertical 12px, horizontal 16px */
+    border-radius: 8px; /* Bordas arredondadas */
+    margin-bottom: 20px; /* Margem inferior */
+    font-weight: 500; /* Peso médio */
+    display: none; /* Escondida por padrão */
 }
 
-.message.show {
-    display: block;
+.message.show { /* Quando tem classe show */
+    display: block; /* Fica visível (block ocupa linha inteira) */
 }
 
-.message.success {
-    background-color: #ecfdf5;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
+.message.success { /* Mensagem de sucesso */
+    background-color: #ecfdf5; /* Fundo verde muito claro */
+    color: #065f46; /* Texto verde escuro */
+    border: 1px solid #a7f3d0; /* Borda verde clara */
 }
 
-.message.error {
-    background-color: #fef2f2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+.message.error { /* Mensagem de erro */
+    background-color: #fef2f2; /* Fundo vermelho muito claro */
+    color: #991b1b; /* Texto vermelho escuro */
+    border: 1px solid #fecaca; /* Borda vermelha clara */
 }
 
-.message.warning {
-    background-color: #fffbeb;
-    color: #92400e;
-    border: 1px solid #fed7aa;
+.message.warning { /* Mensagem de aviso */
+    background-color: #fffbeb; /* Fundo amarelo/laranja muito claro */
+    color: #92400e; /* Texto marrom escuro */
+    border: 1px solid #fed7aa; /* Borda laranja clara */
 }
 
 /* === MODAL === */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 2000;
+.modal { /* Caixa de diálogo modal */
+    display: none; /* Escondido por padrão */
+    position: fixed; /* Posição fixa na tela */
+    top: 0; /* Cola no topo */
+    left: 0; /* Cola na esquerda */
+    width: 100%; /* Largura 100% da viewport */
+    height: 100%; /* Altura 100% da viewport */
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo preto com 50% opacidade (overlay escuro) */
+    z-index: 2000; /* Empilhamento acima de tudo (header é 1000) */
 }
 
-.modal.show {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.modal.show { /* Modal quando tem classe show */
+    display: flex; /* Flexbox para centralizar conteúdo */
+    align-items: center; /* Centraliza verticalmente */
+    justify-content: center; /* Centraliza horizontalmente */
 }
 
-.modal-content {
-    background-color: var(--white);
-    border-radius: 12px;
-    padding: 24px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
+.modal-content { /* Conteúdo interno do modal */
+    background-color: var(--white); /* Fundo branco */
+    border-radius: 12px; /* Bordas arredondadas */
+    padding: 24px; /* Padding interno */
+    max-width: 500px; /* Largura máxima 500px */
+    width: 90%; /* Largura 90% em telas pequenas */
+    max-height: 90vh; /* Altura máxima 90% da viewport height */
+    overflow-y: auto; /* Scroll vertical se conteúdo ultrapassar altura */
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+.modal-header { /* Cabeçalho do modal */
+    display: flex; /* Flexbox */
+    justify-content: space-between; /* Título à esquerda, botão X à direita */
+    align-items: center; /* Alinha verticalmente */
+    margin-bottom: 20px; /* Espaço abaixo */
 }
 
-.modal-title {
-    font-size: 1.25rem;
-    font-weight: 600;
+.modal-title { /* Título do modal */
+    font-size: 1.25rem; /* Tamanho 1.25x o base (20px) */
+    font-weight: 600; /* Semi-negrito */
 }
 
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--text-secondary);
+.close-btn { /* Botão X de fechar */
+    background: none; /* Sem fundo */
+    border: none; /* Sem borda */
+    font-size: 1.5rem; /* Tamanho 1.5x (24px) */
+    cursor: pointer; /* Mãozinha */
+    color: var(--text-secondary); /* Cinza */
 }
 
-.close-btn:hover {
-    color: var(--text-primary);
+.close-btn:hover { /* Hover do botão fechar */
+    color: var(--text-primary); /* Fica mais escuro */
 }
 
 /* === BUSCA === */
-.search-container {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
+.search-container { /* Container da busca */
+    display: flex; /* Flexbox: input e botões em linha */
+    gap: 12px; /* Espaço de 12px entre elementos */
+    margin-bottom: 20px; /* Margem inferior */
 }
 
-.search-input {
-    flex: 1;
-    padding: 10px 16px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 14px;
+.search-input { /* Input de busca */
+    flex: 1; /* Ocupa todo espaço disponível (cresce) */
+    padding: 10px 16px; /* Padding */
+    border: 1px solid var(--border); /* Borda cinza */
+    border-radius: 8px; /* Bordas arredondadas */
+    font-size: 14px; /* Tamanho da fonte */
 }
 
 /* === LOGIN === */
-.login-container {
-    min-height: calc(100vh - 80px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    padding: 20px;
+.login-container { /* Container principal da página de login */
+    min-height: calc(100vh - 80px); /* Altura mínima: 100% viewport - 80px (calc faz cálculo) */
+    display: flex; /* Flexbox */
+    align-items: center; /* Centraliza verticalmente */
+    justify-content: center; /* Centraliza horizontalmente */
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); /* Gradiente diagonal: 135°, azul claro a escuro */
+    padding: 20px; /* Padding */
 }
 
-.login-card {
-    background-color: var(--white);
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: var(--shadow-lg);
-    width: 100%;
-    max-width: 400px;
+.login-card { /* Card de login */
+    background-color: var(--white); /* Fundo branco */
+    border-radius: 16px; /* Bordas arredondadas maiores */
+    padding: 40px; /* Padding generoso */
+    box-shadow: var(--shadow-lg); /* Sombra grande */
+    width: 100%; /* Largura 100% */
+    max-width: 400px; /* Máximo 400px */
 }
 
-.login-header {
-    text-align: center;
-    margin-bottom: 32px;
+.login-header { /* Cabeçalho do card de login */
+    text-align: center; /* Texto centralizado */
+    margin-bottom: 32px; /* Margem inferior */
 }
 
-.login-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 8px;
+.login-title { /* Título do login */
+    font-size: 1.75rem; /* Tamanho 1.75x (28px) */
+    font-weight: 700; /* Negrito */
+    color: var(--text-primary); /* Cor escura */
+    margin-bottom: 8px; /* Espaço abaixo */
 }
 
-.login-subtitle {
-    color: var(--text-secondary);
+.login-subtitle { /* Subtítulo do login */
+    color: var(--text-secondary); /* Cinza */
 }
 
 /* === CHART CONTAINER === */
-.chart-container {
-    background-color: var(--white);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: var(--shadow);
-    margin-bottom: 20px;
+.chart-container { /* Container do gráfico Chart.js */
+    background-color: var(--white); /* Fundo branco */
+    border-radius: 12px; /* Bordas arredondadas */
+    padding: 24px; /* Padding */
+    box-shadow: var(--shadow); /* Sombra */
+    margin-bottom: 20px; /* Margem inferior */
 }
 
-.chart-canvas {
-    max-height: 400px;
+.chart-canvas { /* Canvas do Chart.js */
+    max-height: 400px; /* Altura máxima 400px */
 }
 
 /* === RESPONSIVIDADE === */
-@media (max-width: 768px) {
-    .mobile-menu-btn {
-        display: block;
+@media (max-width: 768px) { /* Media query: aplica estilos quando largura ≤ 768px (tablets e celulares) */
+    .mobile-menu-btn { /* Botão hambúrguer */
+        display: block; /* Fica visível em mobile */
     }
     
-    .nav-menu {
-        display: none;
-        position: absolute;
-        top: 64px;
-        left: 0;
-        right: 0;
-        background-color: var(--white);
-        flex-direction: column;
-        padding: 20px;
-        border-bottom: 1px solid var(--border);
-        box-shadow: var(--shadow);
+    .nav-menu { /* Menu de navegação */
+        display: none; /* Escondido por padrão */
+        position: absolute; /* Posição absoluta (sai do fluxo) */
+        top: 64px; /* Abaixo do header */
+        left: 0; /* Cola na esquerda */
+        right: 0; /* Cola na direita (largura total) */
+        background-color: var(--white); /* Fundo branco */
+        flex-direction: column; /* Itens em coluna (vertical) */
+        padding: 20px; /* Padding */
+        border-bottom: 1px solid var(--border); /* Borda inferior */
+        box-shadow: var(--shadow); /* Sombra */
     }
     
-    .nav-menu.show {
-        display: flex;
+    .nav-menu.show { /* Menu quando tem classe show */
+        display: flex; /* Fica visível */
     }
     
-    .form-row {
-        grid-template-columns: 1fr;
+    .form-row { /* Linha de 2 inputs */
+        grid-template-columns: 1fr; /* Muda para 1 coluna (inputs ficam verticais) */
     }
     
-    .dashboard-cards {
-        grid-template-columns: 1fr;
+    .dashboard-cards { /* Grid do dashboard */
+        grid-template-columns: 1fr; /* 1 coluna (cards empilhados) */
     }
     
-    .search-container {
-        flex-direction: column;
+    .search-container { /* Container de busca */
+        flex-direction: column; /* Input e botões em coluna */
     }
     
-    .main-content {
-        padding: 20px 16px;
+    .main-content { /* Conteúdo principal */
+        padding: 20px 16px; /* Padding menor em mobile */
     }
     
-    .table-container {
-        font-size: 14px;
+    .table-container { /* Container da tabela */
+        font-size: 14px; /* Fonte menor */
     }
     
-    .modal-content {
-        width: 95%;
-        padding: 20px;
+    .modal-content { /* Conteúdo do modal */
+        width: 95%; /* Largura 95% (quase tela inteira) */
+        padding: 20px; /* Padding menor */
     }
 }
 
-@media (max-width: 480px) {
-    .header-content {
-        padding: 0 16px;
+@media (max-width: 480px) { /* Media query para celulares pequenos (≤ 480px) */
+    .header-content { /* Conteúdo do header */
+        padding: 0 16px; /* Padding lateral menor */
     }
     
-    .header h1 {
-        font-size: 1.25rem;
+    .header h1 { /* Título do header */
+        font-size: 1.25rem; /* Fonte menor (20px) */
     }
     
-    .card {
-        padding: 16px;
+    .card { /* Cards genéricos */
+        padding: 16px; /* Padding reduzido */
     }
     
-    .stat-card {
-        padding: 16px;
+    .stat-card { /* Cards de estatística */
+        padding: 16px; /* Padding reduzido */
     }
     
-    .stat-number {
-        font-size: 2rem;
+    .stat-number { /* Número da estatística */
+        font-size: 2rem; /* Fonte menor (32px) */
     }
     
-    .login-card {
-        padding: 24px;
-        margin: 16px;
+    .login-card { /* Card de login */
+        padding: 24px; /* Padding menor */
+        margin: 16px; /* Margem de 16px */
     }
     
-    .btn {
-        padding: 8px 16px;
-        font-size: 13px;
+    .btn { /* Botões genéricos */
+        padding: 8px 16px; /* Padding menor */
+        font-size: 13px; /* Fonte menor */
     }
 }
 
 /* === ANIMAÇÕES === */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+@keyframes fadeIn { /* Define animação fadeIn (aparecer gradualmente) */
+    from { /* Estado inicial */
+        opacity: 0; /* Transparente */
+        transform: translateY(20px); /* 20px abaixo */
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    to { /* Estado final */
+        opacity: 1; /* Opaco */
+        transform: translateY(0); /* Posição original */
     }
 }
 
-.fade-in {
-    animation: fadeIn 0.5s ease-out;
+.fade-in { /* Classe que aplica animação */
+    animation: fadeIn 0.5s ease-out; /* Usa fadeIn, dura 0.5s, ease-out desacelera no fim */
 }
 
 /* === RODAPÉ === */
-.footer {
-    background-color: var(--background);
-    border-top: 1px solid var(--border);
-    padding: 20px;
-    text-align: center;
-    margin-top: 40px;
-    position: relative;
-    overflow: hidden;
+.footer { /* Rodapé da página */
+    background-color: var(--background); /* Fundo cinza claro */
+    border-top: 1px solid var(--border); /* Borda superior */
+    padding: 20px; /* Padding */
+    text-align: center; /* Texto centralizado */
+    margin-top: 40px; /* Margem superior */
+    position: relative; /* Posição relativa (contexto para absolute) */
+    overflow: hidden; /* Esconde conteúdo que sair da área */
 }
 
-.footer-frame {
-    display: inline-block;
-    padding: 12px 24px;
-    background: linear-gradient(135deg, var(--white) 0%, #f8fafc 100%);
-    border: 2px solid var(--primary);
-    border-radius: 8px;
-    color: var(--text-primary);
-    font-size: 14px;
-    font-weight: 500;
-    position: relative;
-    box-shadow: var(--shadow);
-    animation: frameSlide 2s ease-out;
+.footer-frame { /* Moldura do rodapé */
+    display: inline-block; /* Inline-block: fica na linha mas respeita dimensões */
+    padding: 12px 24px; /* Padding */
+    background: linear-gradient(135deg, var(--white) 0%, #f8fafc 100%); /* Gradiente branco para cinza */
+    border: 2px solid var(--primary); /* Borda azul de 2px */
+    border-radius: 8px; /* Bordas arredondadas */
+    color: var(--text-primary); /* Cor do texto */
+    font-size: 14px; /* Tamanho da fonte */
+    font-weight: 500; /* Peso médio */
+    position: relative; /* Contexto para ::before */
+    box-shadow: var(--shadow); /* Sombra */
+    animation: frameSlide 2s ease-out; /* Animação de entrada */
 }
 
-.footer-frame::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-    animation: frameGlow 3s ease-in-out infinite;
+.footer-frame::before { /* Pseudo-elemento antes do conteúdo */
+    content: ''; /* Conteúdo vazio (necessário) */
+    position: absolute; /* Posição absoluta */
+    top: 0; /* Cola no topo */
+    left: -100%; /* Começa fora da tela à esquerda */
+    width: 100%; /* Largura 100% */
+    height: 100%; /* Altura 100% */
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent); /* Gradiente horizontal (brilho) */
+    animation: frameGlow 3s ease-in-out infinite; /* Animação infinita */
 }
 
-.footer-login {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 12px;
-    text-align: center;
-    padding: 8px 16px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    animation: fadeInUp 1s ease-out;
+.footer-login { /* Rodapé na página de login */
+    position: absolute; /* Posição absoluta */
+    bottom: 20px; /* 20px do fundo */
+    left: 50%; /* 50% da esquerda */
+    transform: translateX(-50%); /* Move metade da largura para esquerda (centraliza) */
+    color: rgba(255, 255, 255, 0.9); /* Branco quase opaco */
+    font-size: 12px; /* Fonte pequena */
+    text-align: center; /* Texto centralizado */
+    padding: 8px 16px; /* Padding */
+    background: rgba(0, 0, 0, 0.2); /* Fundo preto com 20% opacidade */
+    border-radius: 20px; /* Bordas muito arredondadas */
+    backdrop-filter: blur(10px); /* Desfoca o que está atrás (efeito vidro) */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Borda branca semi-transparente */
+    animation: fadeInUp 1s ease-out; /* Animação de entrada */
 }
 
 /* === ANIMAÇÕES DO RODAPÉ === */
-@keyframes frameSlide {
-    0% {
-        transform: translateX(-100%);
-        opacity: 0;
+@keyframes frameSlide { /* Animação de deslizar da moldura */
+    0% { /* Início */
+        transform: translateX(-100%); /* Fora da tela à esquerda */
+        opacity: 0; /* Transparente */
     }
-    50% {
-        opacity: 0.8;
+    50% { /* Meio da animação */
+        opacity: 0.8; /* 80% opaco */
     }
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes frameGlow {
-    0% {
-        left: -100%;
-    }
-    100% {
-        left: 100%;
+    100% { /* Fim */
+        transform: translateX(0); /* Posição original */
+        opacity: 1; /* Totalmente opaco */
     }
 }
 
-@keyframes fadeInUp {
-    0% {
-        transform: translateX(-50%) translateY(20px);
-        opacity: 0;
+@keyframes frameGlow { /* Animação de brilho passando */
+    0% { /* Início */
+        left: -100%; /* Esquerda fora da tela */
     }
-    100% {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
+    100% { /* Fim */
+        left: 100%; /* Direita fora da tela */
+    }
+}
+
+@keyframes fadeInUp { /* Animação aparecer de baixo */
+    0% { /* Início */
+        transform: translateX(-50%) translateY(20px); /* Centralizado + 20px abaixo */
+        opacity: 0; /* Transparente */
+    }
+    100% { /* Fim */
+        transform: translateX(-50%) translateY(0); /* Centralizado + posição original */
+        opacity: 1; /* Opaco */
     }
 }
 
 /* === UTILIDADES === */
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.mt-20 { margin-top: 20px; }
-.mb-20 { margin-bottom: 20px; }
-.hidden { display: none; }
-.flex { display: flex; }
-.flex-between { justify-content: space-between; }
-.flex-center { justify-content: center; }
-.items-center { align-items: center; }
-.gap-10 { gap: 10px; }
-.w-full { width: 100%; }
+.text-center { text-align: center; } /* Texto centralizado */
+.text-right { text-align: right; } /* Texto alinhado à direita */
+.mt-20 { margin-top: 20px; } /* Margem topo 20px */
+.mb-20 { margin-bottom: 20px; } /* Margem fundo 20px */
+.hidden { display: none; } /* Esconde elemento */
+.flex { display: flex; } /* Ativa flexbox */
+.flex-between { justify-content: space-between; } /* Espaço entre itens */
+.flex-center { justify-content: center; } /* Centraliza horizontalmente */
+.items-center { align-items: center; } /* Alinha verticalmente ao centro */
+.gap-10 { gap: 10px; } /* Espaço de 10px entre itens flex/grid */
+.w-full { width: 100%; } /* Largura 100% */

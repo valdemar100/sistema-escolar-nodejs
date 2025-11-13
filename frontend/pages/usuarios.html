@@ -1,109 +1,109 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuários - Sistema Escolar</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+<!DOCTYPE html> <!-- Declara documento HTML5 -->
+<html lang="pt-BR"> <!-- Tag HTML principal com idioma português do Brasil -->
+<head> <!-- Cabeçalho com metadados da página -->
+    <meta charset="UTF-8"> <!-- Codificação UTF-8 para acentos e caracteres especiais -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsividade: adapta para mobile -->
+    <title>Usuários - Sistema Escolar</title> <!-- Título que aparece na aba do navegador -->
+    <link rel="stylesheet" href="../assets/css/style.css"> <!-- Importa arquivo CSS com estilos -->
 </head>
-<body>
-    <header class="header">
-        <div class="header-content">
-            <h1>Sistema Escolar</h1>
-            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
-            <nav>
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="/dashboard">Início</a></li>
-                    <li><a href="/usuarios" class="active">Usuários</a></li>
-                    <li><a href="/alunos">Alunos</a></li>
-                    <li><a href="/professores">Professores</a></li>
-                    <li><a href="#" onclick="logout()" style="color: var(--error);">Sair</a></li>
+<body> <!-- Corpo da página -->
+    <header class="header"> <!-- Cabeçalho fixo no topo -->
+        <div class="header-content"> <!-- Container do conteúdo do header -->
+            <h1>Sistema Escolar</h1> <!-- Título principal do sistema -->
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button> <!-- Botão hambúrguer para abrir menu em mobile, onclick chama função toggleMenu() -->
+            <nav> <!-- Elemento de navegação -->
+                <ul class="nav-menu" id="navMenu"> <!-- Lista não ordenada com links de navegação, id permite manipular via JS -->
+                    <li><a href="/dashboard">Início</a></li> <!-- Link para dashboard -->
+                    <li><a href="/usuarios" class="active">Usuários</a></li> <!-- Link para usuários, class="active" deixa destacado -->
+                    <li><a href="/alunos">Alunos</a></li> <!-- Link para alunos -->
+                    <li><a href="/professores">Professores</a></li> <!-- Link para professores -->
+                    <li><a href="#" onclick="logout()" style="color: var(--error);">Sair</a></li> <!-- Link de logout, onclick chama função logout(), style deixa vermelho -->
                 </ul>
-            </nav>
-        </div>
-    </header>
+            </nav> <!-- Fecha elemento nav -->
+        </div> <!-- Fecha header-content -->
+    </header> <!-- Fecha header -->
 
-    <main class="main-content">
-        <div class="card fade-in">
-            <div class="card-header">
-                <h2 class="card-title">Gerenciar Usuários</h2>
-                <button class="btn btn-primary btn-sm" onclick="abrirModal()">
-                    ➕ Adicionar Usuário
+    <main class="main-content"> <!-- Conteúdo principal da página -->
+        <div class="card fade-in"> <!-- Card com animação fade-in (aparece gradualmente) -->
+            <div class="card-header"> <!-- Cabeçalho do card -->
+                <h2 class="card-title">Gerenciar Usuários</h2> <!-- Título do card -->
+                <button class="btn btn-primary btn-sm" onclick="abrirModal()"> <!-- Botão para adicionar usuário, onclick abre modal -->
+                    ➕ Adicionar Usuário <!-- Emoji de mais + texto do botão -->
                 </button>
-            </div>
+            </div> <!-- Fecha card-header -->
 
-            <div id="message" class="message"></div>
+            <div id="message" class="message"></div> <!-- Div para mostrar mensagens de sucesso/erro, id permite acessar via JS -->
 
-            <div class="table-container">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>E-mail</th>
-                            <th>Criado em</th>
-                            <th>Ações</th>
+            <div class="table-container"> <!-- Container responsivo para a tabela -->
+                <table class="table"> <!-- Tabela HTML com estilo aplicado pela classe -->
+                    <thead> <!-- Cabeçalho da tabela -->
+                        <tr> <!-- Linha de cabeçalho (table row) -->
+                            <th>ID</th> <!-- Coluna: ID do usuário -->
+                            <th>Nome</th> <!-- Coluna: Nome completo -->
+                            <th>E-mail</th> <!-- Coluna: Email -->
+                            <th>Criado em</th> <!-- Coluna: Data de criação -->
+                            <th>Ações</th> <!-- Coluna: Botões de editar/excluir -->
+                        </tr> <!-- Fecha linha -->
+                    </thead> <!-- Fecha thead -->
+                    <tbody id="tabelaUsuarios"> <!-- Corpo da tabela onde os dados serão inseridos via JS -->
+                        <tr> <!-- Linha inicial (será substituída pelo JS) -->
+                            <td colspan="5" class="text-center">Carregando usuários...</td> <!-- Mensagem de carregamento, colspan="5" ocupa 5 colunas -->
                         </tr>
-                    </thead>
-                    <tbody id="tabelaUsuarios">
-                        <tr>
-                            <td colspan="5" class="text-center">Carregando usuários...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
+                    </tbody> <!-- Fecha tbody -->
+                </table> <!-- Fecha table -->
+            </div> <!-- Fecha table-container -->
+        </div> <!-- Fecha card -->
+    </main> <!-- Fecha main-content -->
 
-    <!-- Modal para adicionar/editar usuário -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Adicionar Usuário</h3>
-                <button class="close-btn" onclick="fecharModal()">&times;</button>
-            </div>
+    <!-- Modal para adicionar/editar usuário --> <!-- Comentário explicando que é um modal (caixa de diálogo) -->
+    <div id="modal" class="modal"> <!-- Div modal, inicialmente escondida, id permite manipular via JS -->
+        <div class="modal-content"> <!-- Conteúdo interno do modal -->
+            <div class="modal-header"> <!-- Cabeçalho do modal -->
+                <h3 class="modal-title" id="modalTitle">Adicionar Usuário</h3> <!-- Título do modal, id permite mudar texto via JS -->
+                <button class="close-btn" onclick="fecharModal()">&times;</button> <!-- Botão X para fechar modal, &times; é o símbolo × -->
+            </div> <!-- Fecha modal-header -->
 
-            <form id="usuarioForm">
-                <input type="hidden" id="usuarioId">
+            <form id="usuarioForm"> <!-- Formulário para criar/editar usuário, id permite capturar submit via JS -->
+                <input type="hidden" id="usuarioId"> <!-- Campo oculto para armazenar ID quando está editando -->
                 
-                <div class="form-group">
-                    <label for="nome" class="form-label">Nome Completo</label>
-                    <input type="text" id="nome" name="nome" class="form-input" required>
-                </div>
+                <div class="form-group"> <!-- Grupo do formulário (label + input) -->
+                    <label for="nome" class="form-label">Nome Completo</label> <!-- Label associado ao input nome -->
+                    <input type="text" id="nome" name="nome" class="form-input" required> <!-- Input texto para nome, required torna obrigatório -->
+                </div> <!-- Fecha form-group -->
 
-                <div class="form-group">
-                    <label for="email" class="form-label">E-mail</label>
-                    <input type="email" id="email" name="email" class="form-input" required>
-                </div>
+                <div class="form-group"> <!-- Grupo para email -->
+                    <label for="email" class="form-label">E-mail</label> <!-- Label do email -->
+                    <input type="email" id="email" name="email" class="form-input" required> <!-- Input type="email" valida formato de email -->
+                </div> <!-- Fecha form-group -->
 
-                <div class="form-group">
-                    <label for="senha" class="form-label">Senha</label>
-                    <input type="password" id="senha" name="senha" class="form-input" required>
-                </div>
+                <div class="form-group"> <!-- Grupo para senha -->
+                    <label for="senha" class="form-label">Senha</label> <!-- Label da senha -->
+                    <input type="password" id="senha" name="senha" class="form-input" required> <!-- Input type="password" mascara caracteres -->
+                </div> <!-- Fecha form-group da senha -->
 
-                <div class="form-group">
-                    <label for="confirmarSenha" class="form-label">Confirmar Senha</label>
-                    <input type="password" id="confirmarSenha" name="confirmarSenha" class="form-input" required>
-                </div>
+                <div class="form-group"> <!-- Grupo para confirmar senha -->
+                    <label for="confirmarSenha" class="form-label">Confirmar Senha</label> <!-- Label de confirmar senha -->
+                    <input type="password" id="confirmarSenha" name="confirmarSenha" class="form-input" required> <!-- Input para confirmar senha, deve ser igual ao campo senha -->
+                </div> <!-- Fecha form-group -->
 
-                <div class="flex gap-10">
-                    <button type="submit" class="btn btn-primary" id="salvarBtn">
-                        Salvar
+                <div class="flex gap-10"> <!-- Container flex com gap de 10px entre elementos -->
+                    <button type="submit" class="btn btn-primary" id="salvarBtn"> <!-- Botão de submit, envia formulário -->
+                        Salvar <!-- Texto do botão -->
                     </button>
-                    <button type="button" class="btn btn-secondary" onclick="fecharModal()">
-                        Cancelar
+                    <button type="button" class="btn btn-secondary" onclick="fecharModal()"> <!-- Botão type="button" não submete, onclick fecha modal -->
+                        Cancelar <!-- Texto do botão cancelar -->
                     </button>
-                </div>
-            </form>
-        </div>
-    </div>
+                </div> <!-- Fecha flex -->
+            </form> <!-- Fecha formulário -->
+        </div> <!-- Fecha modal-content -->
+    </div> <!-- Fecha modal -->
 
-    <footer class="footer">
-        <div class="footer-frame">
-            © Valdemar Sistemas - 2025
-        </div>
-    </footer>
+    <footer class="footer"> <!-- Rodapé da página -->
+        <div class="footer-frame"> <!-- Container do rodapé -->
+            © Valdemar Sistemas - 2025 <!-- Texto de copyright -->
+        </div> <!-- Fecha footer-frame -->
+    </footer> <!-- Fecha footer -->
 
-    <script src="../assets/js/usuarios.js"></script>
-</body>
-</html>
+    <script src="../assets/js/usuarios.js"></script> <!-- Importa arquivo JavaScript que controla toda lógica do CRUD de usuários -->
+</body> <!-- Fecha body -->
+</html> <!-- Fecha html -->

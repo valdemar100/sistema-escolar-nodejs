@@ -169,32 +169,34 @@ function limparBusca() { // Define função limparBusca (sem parâmetros)
 // FUNÇÃO: Exibir alunos na tabela
 function exibirAlunos(alunos) { // Define função com parâmetro alunos (array)
     if (alunos.length === 0) { // Se array está vazio (length = 0)
-        tabelaAlunos.innerHTML = ` // Define HTML interno do tbody
-            <tr> <!-- Linha da tabela -->
-                <td colspan="7" class="text-center">Nenhum aluno encontrado</td> <!-- Célula ocupando 7 colunas -->
-            </tr> <!-- Fecha linha -->
-        `; // Fecha template literal
+        tabelaAlunos.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center">Nenhum aluno encontrado</td>
+            </tr>
+        `; // Define HTML interno do tbody
         return; // Sai da função (não executa resto do código)
     } // Fecha if
 
-    tabelaAlunos.innerHTML = alunos.map(aluno => ` // map percorre array e retorna novo array de strings HTML
-        <tr> <!-- Linha da tabela (tr = table row) -->
-            <td>${aluno.id}</td> <!-- Célula com ID (template literal injeta valor) -->
-            <td>${aluno.nome}</td> <!-- Célula com nome -->
-            <td>${formatarData(aluno.data_nascimento)}</td> <!-- Célula com data formatada (chama função) -->
-            <td>${aluno.serie_turma}</td> <!-- Célula com série/turma -->
-            <td>${aluno.email || '-'}</td> <!-- Célula com email OU '-' se for null (operador OR) -->
-            <td>${aluno.telefone || '-'}</td> <!-- Célula com telefone OU '-' se for null -->
-            <td> <!-- Célula de ações -->
-                <button class="btn btn-small btn-primary" onclick="editarAluno(${aluno.id})"> <!-- Botão com onclick inline -->
-                    ✏️ Editar <!-- Emoji lápis + texto -->
-                </button> <!-- Fecha botão -->
-                <button class="btn btn-small btn-error" onclick="confirmarExclusao(${aluno.id}, '${aluno.nome}')"> <!-- Passa ID e nome -->
-                    🗑️ Excluir <!-- Emoji lixeira + texto -->
-                </button> <!-- Fecha botão -->
-            </td> <!-- Fecha td -->
-        </tr> <!-- Fecha tr -->
-    `).join(''); // join('') junta array de strings em uma única string sem separador
+    // map percorre array e retorna novo array de strings HTML
+    // join('') junta array de strings em uma única string sem separador
+    tabelaAlunos.innerHTML = alunos.map(aluno => `
+        <tr>
+            <td>${aluno.id}</td>
+            <td>${aluno.nome}</td>
+            <td>${formatarData(aluno.data_nascimento)}</td>
+            <td>${aluno.serie_turma}</td>
+            <td>${aluno.email || '-'}</td>
+            <td>${aluno.telefone || '-'}</td>
+            <td>
+                <button class="btn btn-small btn-primary" onclick="editarAluno(${aluno.id})">
+                    ✏️ Editar
+                </button>
+                <button class="btn btn-small btn-error" onclick="confirmarExclusao(${aluno.id}, '${aluno.nome}')">
+                    🗑️ Excluir
+                </button>
+            </td>
+        </tr>
+    `).join(''); // join concatena tudo em uma string
 } // Fecha função
 
 // FUNÇÃO: Formatar data para exibição (apenas data, sem hora)

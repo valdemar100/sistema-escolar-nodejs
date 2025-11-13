@@ -170,11 +170,11 @@ function limparBusca() { // Função para limpar campo de busca
 // Exibir professores na tabela
 function exibirProfessores(professores) { // Recebe array de professores como parâmetro
     if (professores.length === 0) { // Se array está vazio
-        tabelaProfessores.innerHTML = ` // Define HTML interno da tabela
-            <tr> // Linha da tabela
-                <td colspan="7" class="text-center">Nenhum professor encontrado</td> // Célula ocupando 7 colunas, texto centralizado
+        tabelaProfessores.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center">Nenhum professor encontrado</td>
             </tr>
-        `; // Template literal (string com múltiplas linhas)
+        `; // Define HTML interno da tabela
         return; // Sai da função aqui
     }
 

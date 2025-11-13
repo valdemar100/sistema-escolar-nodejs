@@ -153,33 +153,31 @@ async function carregarUsuarios() { // Define função async (permite usar await
 function exibirUsuarios(usuarios) { // Define função com parâmetro usuarios (array)
     // Se não há usuários, mostra mensagem
     if (usuarios.length === 0) { // Se array está vazio (length = 0)
-        tabelaUsuarios.innerHTML = ` // Define HTML interno do tbody
-            <tr> <!-- Linha da tabela -->
-                <td colspan="5" class="text-center">Nenhum usuário encontrado</td> <!-- Célula ocupando 5 colunas -->
-            </tr> <!-- Fecha linha -->
-        `; // Fecha template literal
+        tabelaUsuarios.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center">Nenhum usuário encontrado</td>
+            </tr>
+        `; // Define HTML interno do tbody
         return; // Sai da função (não executa resto do código)
     } // Fecha if
 
     // map() transforma array de usuários em array de linhas HTML
     // join('') concatena todas as linhas em uma string
-    tabelaUsuarios.innerHTML = usuarios.map(usuario => ` // map percorre array e retorna novo array de strings HTML
-        <tr> <!-- Linha da tabela (tr = table row) -->
-            <td>${usuario.id}</td> <!-- Célula com ID (template literal injeta valor) -->
-            <td>${usuario.nome}</td> <!-- Célula com nome -->
-            <td>${usuario.email}</td> <!-- Célula com email -->
-            <td>${formatarData(usuario.created_at)}</td> <!-- Célula com data formatada (chama função) -->
-            <td> <!-- Célula de ações -->
-                <!-- Botão EDITAR: onclick chama editarUsuario com o ID -->
-                <button class="btn btn-small btn-primary" onclick="editarUsuario(${usuario.id})"> <!-- Botão com onclick inline -->
-                    ✏️ Editar <!-- Emoji lápis + texto -->
-                </button> <!-- Fecha botão -->
-                <!-- Botão EXCLUIR: onclick chama confirmarExclusao -->
-                <button class="btn btn-small btn-error" onclick="confirmarExclusao(${usuario.id}, '${usuario.nome}')"> <!-- Passa ID e nome -->
-                    🗑️ Excluir <!-- Emoji lixeira + texto -->
-                </button> <!-- Fecha botão -->
-            </td> <!-- Fecha td -->
-        </tr> <!-- Fecha tr -->
+    tabelaUsuarios.innerHTML = usuarios.map(usuario => `
+        <tr>
+            <td>${usuario.id}</td>
+            <td>${usuario.nome}</td>
+            <td>${usuario.email}</td>
+            <td>${formatarData(usuario.created_at)}</td>
+            <td>
+                <button class="btn btn-small btn-primary" onclick="editarUsuario(${usuario.id})">
+                    ✏️ Editar
+                </button>
+                <button class="btn btn-small btn-error" onclick="confirmarExclusao(${usuario.id}, '${usuario.nome}')">
+                    🗑️ Excluir
+                </button>
+            </td>
+        </tr>
     `).join(''); // join('') junta array de strings em uma única string sem separador
 } // Fecha função
 

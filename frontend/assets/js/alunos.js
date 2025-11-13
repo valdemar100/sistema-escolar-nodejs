@@ -353,10 +353,10 @@ alunoForm.addEventListener('submit', (e) => { // Adiciona escutador de evento 's
         return; // Sai da função sem salvar
     } // Fecha if
 
-    // Validar que telefone tem no máximo 11 dígitos
+    // Validar que telefone tem exatamente 11 dígitos
     const apenasNumeros = telefone.replace(/\D/g, ''); // Remove tudo que não é dígito (\D = não-dígito, /g = global)
-    if (apenasNumeros.length > 11) { // Se quantidade de números é maior que 11
-        showMessage('Telefone deve ter no máximo 11 dígitos'); // Mostra erro
+    if (apenasNumeros.length !== 11) { // Se quantidade de números não é igual a 11 (!== é diferente)
+        showMessage('Telefone deve ter exatamente 11 dígitos (DDD + número)'); // Mostra erro
         return; // Sai da função
     } // Fecha if
 

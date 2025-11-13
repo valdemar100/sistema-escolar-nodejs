@@ -342,10 +342,30 @@ professorForm.addEventListener('submit', (e) => { // Escuta evento submit (envio
         return; // Sai da função sem salvar
     }
 
-    if (email && !isValidEmail(email)) { // Se email preenchido E não é válido (&& é AND)
+    // Validar email obrigatório
+    if (!email) { // Se email está vazio (! inverte o valor booleano)
+        showMessage('E-mail é obrigatório'); // Mostra mensagem de erro
+        return; // Sai da função sem salvar
+    } // Fecha if
+
+    // Validar formato do email
+    if (!isValidEmail(email)) { // Se email não é válido (chama função isValidEmail)
         showMessage('Por favor, digite um e-mail válido'); // Mostra erro
         return; // Sai da função
-    }
+    } // Fecha if
+
+    // Validar telefone obrigatório
+    if (!telefone) { // Se telefone está vazio (! converte para booleano e inverte)
+        showMessage('Telefone é obrigatório'); // Mostra mensagem de erro
+        return; // Sai da função sem salvar
+    } // Fecha if
+
+    // Validar que telefone tem exatamente 11 dígitos
+    const apenasNumeros = telefone.replace(/\D/g, ''); // Remove tudo que não é dígito (\D = não-dígito, /g = global)
+    if (apenasNumeros.length !== 11) { // Se quantidade de números não é igual a 11 (!== é diferente)
+        showMessage('Telefone deve ter exatamente 11 dígitos (DDD + número)'); // Mostra erro
+        return; // Sai da função
+    } // Fecha if
 
     // Preparar dados
     const dadosProfessor = { // Cria objeto literal
